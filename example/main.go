@@ -13,6 +13,6 @@ func main() {
 		Key: "page_title",
 		Value: "Underpin",
 	}
-	fmt.Println( loader.TemplateRender( "home", data ) );
+	fmt.Println( loader.Template( "home", data ) );
 	
 }

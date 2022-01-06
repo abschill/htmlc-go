@@ -44,7 +44,7 @@ func ( loader *Loader ) retrievePartials( content string ) string {
  * TemplatePreRender handles pre-rendering partials into the template 
  * TemplateRender handles rendering key/values into the template with it's partials preloaded
 **/
-func ( loader *Loader ) TemplatePreRender( name string ) string {
+func ( loader *Loader ) preRender( name string ) string {
 	fileName := NameHTML( name )
 	for _, v := range loader.templateData {
 		if v.name == fileName {
@@ -56,8 +56,8 @@ func ( loader *Loader ) TemplatePreRender( name string ) string {
 	panic( "No Template Match for" + fileName )
 }
 
-func ( loader *Loader ) TemplateRender( name string, data []Input ) string {
-	content := loader.TemplatePreRender( name )
+func ( loader *Loader ) Template( name string, data []Input ) string {
+	content := loader.preRender( name )
 	hasKeys := HasKeys( content )
 	if hasKeys == false {
 		return content
