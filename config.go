@@ -32,7 +32,7 @@ func CustomLoaderOptions( base string, templates string, partials string, debug 
 
 func DefineLoader( config LoaderOptions ) Loader {
 
-	baseDir := "../" + config.base + "/"
+	baseDir := config.base + "/"
 	templateDir := baseDir + config.templates + "/"
 	partialDir := baseDir + config.partials + "/"
 	
