@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"underpin"
+	"github.com/abschill/underpin"
 )
 
 func main() {
