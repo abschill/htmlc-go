@@ -52,7 +52,7 @@ func FindKeyIndexes( content string ) [][]int {
 **/
 const FOR_NAME_MATCH = "<!--@for((.*?)){[\n?|\t|\r| .]+\n?}"
 
-const FOR_CONTENT_MATCH = "<!--@for((.*?)){[\n|\t]*([\t|\n]?.+?)\n?}"
+const FOR_CONTENT_MATCH = "<!--@for((.*?)){\n?(\n*\t*.+?)\n?}"
 
 func HasLoop( content string ) bool {
 	matches, _ := regexp.MatchString( FOR_CONTENT_MATCH, content )
