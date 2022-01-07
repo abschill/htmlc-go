@@ -3,19 +3,63 @@ package up
 import "testing"
 
 func TestHasPartials( t *testing.T ) {
-	content := "<!--@render-partial=test-->"
-	match := HasPartials( content )
+	content0 := "<!--@render-partial=test-->"
+	match0 := HasPartials( content0 )
 
-	if match != true {
-		t.Errorf( "Has Partials Failed" )
+	if match0 != true {
+		t.Errorf( "Has Partials Failed - Content 0" )
 	}
+
+	content1 := "hello world"
+	match1 := HasPartials( content1 )
+
+	if match1 == true {
+		t.Errorf( "Has Partials Failed - Content 1" )
+	}
+
+
 }
 
 func TestHasKeys( t *testing.T ) {
-	content := "<!--@render=test-->"
-	match := HasKeys( content )
+	match0 := HasKeys( "<!--@render=test-->" )
+	match1 := HasKeys( "hello" )
 
-	if match != true {
-		t.Errorf( "Has Keys Failed" )
+	if match0 != true {
+		t.Errorf( "Has Keys Failed - Match 0" )
 	}
+
+	if match1 == true {
+		t.Errorf( "Has Keys Failed - Match 1")
+	}
+}
+
+func TestHasLoop0( t *testing.T ) {
+	match0 := HasLoop( `<!--@for(test){
+<foo></foo>
+}`)
+	if match0 != true {
+		t.Errorf( "Has Loop Failed - Match 0" )
+	}
+
+	match1 := HasLoop( `<!--@for(test){
+		<foo></foo>
+}`)
+
+	if match1 != true {
+		t.Errorf( "Has Loop Failed - Match 1" )
+	}
+
+	match2 := HasLoop( `<!--@for(test){
+		<foo></foo>}`)
+
+	if match2 != true {
+		t.Errorf( "Has Loop Failed - Match 2" )
+	}
+
+	match3 := HasLoop( `<!--@for(test){<foo></foo>}`)
+
+	if match3 != true {
+		t.Errorf( "Has Loop Failed - Match 3" )
+	}
+
 }

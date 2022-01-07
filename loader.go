@@ -1,6 +1,7 @@
 package up
 import (
 	"strings"
+	"fmt"
 )
 /**
  * Returns Array of PartialRaw for the runtime to get ready to Load into a template
@@ -58,6 +59,7 @@ func ( loader *Loader ) preRender( name string ) string {
 
 func ( loader *Loader ) Template( name string, data []Input ) string {
 	content := loader.preRender( name )
+	fmt.Println( FindLoops( content ) )
 	hasKeys := HasKeys( content )
 	if hasKeys == false {
 		return content

@@ -17,6 +17,11 @@ type Input struct {
 	Value string
 }
 
+type ArrInput struct {
+	Key string
+	Value []Input
+}
+
 // Template/Partial Input Object
 type InputFile struct {
 	name string

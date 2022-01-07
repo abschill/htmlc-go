@@ -5,7 +5,7 @@ import (
 )
 
 /**
- * Partial Parser
+ * Partials
 **/
 const PARTIAL_MATCH = "<!--@render-partial=([a-z | 0-9 | _ | -]+)-->"
 
@@ -27,12 +27,12 @@ func FindPartialIndexes( content string ) [][]int {
 }
 
 /**
- * Key Parser
+ * Keys
 **/
 const KEY_MATCH = "<!--@render=([a-z | 0-9 | _ | -]+)-->"
 
 func HasKeys( content string ) bool {
-	matches, _ := regexp.MatchString( KEY_MATCH , content )
+	matches, _ := regexp.MatchString( KEY_MATCH, content )
 	return matches;
 }
 
@@ -44,6 +44,31 @@ func FindKeys( content string ) []string {
 
 func FindKeyIndexes( content string ) [][]int {
 	r, _ := regexp.Compile( KEY_MATCH )
+	items := r.FindAllStringIndex( content, -1 )
+	return items;
+}
+
+
+/**
+ * Iterators
+**/
+const FOR_NAME_MATCH = "<!--@for((.*?)){[\n?|\t|\r| .]+\n?}"
+
+const FOR_CONTENT_MATCH = "<!--@for((.*?)){\n?([\t|\n]?.+?)\n?}"
+
+func HasLoop( content string ) bool {
+	matches, _ := regexp.MatchString( FOR_CONTENT_MATCH, content )
+	return matches;
+}
+
+func FindLoops( content string ) []string {
+	r, _ := regexp.Compile( FOR_CONTENT_MATCH )
+	items := r.FindAllString( content, -1 )
+	return items;
+}
+
+func FindLoopIndexes( content string ) [][]int {
+	r, _ := regexp.Compile( FOR_CONTENT_MATCH )
 	items := r.FindAllStringIndex( content, -1 )
 	return items;
 }
