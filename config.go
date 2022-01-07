@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 )
 
-func Check( e error ) {
+func check( e error ) {
 	if e != nil {
 		panic( e )
 	}
@@ -37,10 +37,10 @@ func DefineLoader( config LoaderOptions ) Loader {
 	partialDir := baseDir + config.partials + "/"
 	
 	templates, err := ioutil.ReadDir( templateDir )
-	Check( err )
+	check( err )
 
 	partials, err := ioutil.ReadDir( partialDir )
-	Check( err )
+	check( err )
 
 	var templateRawData = make( []HTMLChunk, len( templates ) )
 	var partialRawData = make( []HTMLChunk, len( partials ) )
@@ -48,7 +48,7 @@ func DefineLoader( config LoaderOptions ) Loader {
 		name := f.Name()
 		path := templateDir + name
 		data, err := ioutil.ReadFile( path )
-		Check( err )
+		check( err )
 		d := string( data );
 		templateRawData[i] = HTMLChunk {
 			name: name,
@@ -62,7 +62,7 @@ func DefineLoader( config LoaderOptions ) Loader {
 		name := f.Name()
 		path := partialDir + name
 		data, err := ioutil.ReadFile( path )
-		Check( err )
+		check( err )
 		d := string( data );
 		partialRawData[i] = HTMLChunk {
 			name: name,

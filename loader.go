@@ -5,7 +5,7 @@ import (
 /**
  * Returns Array of PartialRaw for the runtime to get ready to Load into a template
 **/
-func ( loader *Loader ) LoadPartials( matcher string, index int ) []PartialRaw {
+func ( loader *Loader ) loadPartials( matcher string, index int ) []PartialRaw {
 	_name := FindPartialFileName( matcher )
 	var partialsToLoad = make( []PartialRaw, len( loader.partialData ) )
 	for _, p := range loader.partialData {
@@ -29,7 +29,7 @@ func ( loader *Loader ) retrievePartials( content string ) string {
 		items := FindPartials( content )
 		_items := FindPartialIndexes( content )
 		for i, _ := range _items {
-			todos := loader.LoadPartials( items[i], i ) 
+			todos := loader.loadPartials( items[i], i ) 
 			for _, todo := range todos {
 				temp = strings.Replace( temp, todo.matcher, todo.content, -1 )
 			}
