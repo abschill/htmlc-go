@@ -6,7 +6,7 @@ import (
  * Returns Array of PartialRaw for the runtime to get ready to Load into a template
 **/
 func ( loader *Loader ) LoadPartials( matcher string, index int ) []PartialRaw {
-	_name := ParsePartialFileName( matcher )
+	_name := FindPartialFileName( matcher )
 	var partialsToLoad = make( []PartialRaw, len( loader.partialData ) )
 	for _, p := range loader.partialData {
 		if p.name == _name {
@@ -66,7 +66,7 @@ func ( loader *Loader ) Template( name string, data []Input ) string {
 	_keys := FindKeyIndexes( content )
 
 	for i, _ := range _keys {
-		keyName := ParseKeyName( keys[i] );
+		keyName := FindKeyName( keys[i] );
 		for _, input := range data {
 			if input.Key == keyName {
 				content = strings.Replace( content, keys[i], input.Value, -1 )
