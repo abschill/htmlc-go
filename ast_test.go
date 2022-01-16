@@ -33,33 +33,32 @@ func TestHasKeys( t *testing.T ) {
 	}
 }
 
-func TestHasLoop0( t *testing.T ) {
-	match0 := HasLoop( `<!--@for(test){
-<foo></foo>
-}`)
+func TestHasLoop( t *testing.T ) {
+	match0 := HasLoop( `<!--@loop=test(
+<div>{_}</foo>
+)-->`)
 	if match0 != true {
 		t.Errorf( "Has Loop Failed - Match 0" )
 	}
 
-	match1 := HasLoop( `<!--@for(test){
-		<foo></foo>
-}`)
+	match1 := HasLoop( `<!--@loop=test(
+		<div>{_}</foo>
+)-->`)
 
 	if match1 != true {
 		t.Errorf( "Has Loop Failed - Match 1" )
 	}
 
-	match2 := HasLoop( `<!--@for(test){
-		<foo></foo>}`)
+	match2 := HasLoop( `<!--@loop=test(
+		<div>{_}</foo>)-->`)
 
 	if match2 != true {
 		t.Errorf( "Has Loop Failed - Match 2" )
 	}
 
-	match3 := HasLoop( `<!--@for(test){<foo></foo>}`)
+	match3 := HasLoop( `<!--@loop=test(<div>{_}</foo>)-->`)
 
 	if match3 != true {
 		t.Errorf( "Has Loop Failed - Match 3" )
 	}
-
 }

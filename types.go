@@ -11,6 +11,11 @@ type LoaderOptions struct {
 	watch bool
 }
 
+const (
+	Single = 0
+	MultiPart = 1
+)
+
 // @render-* input
 type Input struct {
 	Key string
