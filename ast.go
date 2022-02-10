@@ -50,10 +50,12 @@ func FindKeyIndexes( content string ) [][]int {
 /**
  * Iterators
 **/
+const LOOP_OPEN_MATCH = "<!--@loop=(.*?)"
+const LOOP_CLOSE_MATCH = "\\)-->"
 const LOOP_MATCH = "<!--@loop=(.*?)[\n*\t*]*?(<\\w+>.*)\n?\\)-->"
 
 func HasLoop( content string ) bool {
-	matches, _ := regexp.MatchString( LOOP_MATCH, content )
+	matches, _ := regexp.MatchString( LOOP_OPEN_MATCH, content )
 	return matches;
 }
 
@@ -63,8 +65,14 @@ func FindLoops( content string ) []string {
 	return items;
 }
 
-func FindLoopIndexes( content string ) [][]int {
-	r, _ := regexp.Compile( LOOP_MATCH )
+func FindLoopOpenIndexes( content string ) [][]int {
+	r, _ := regexp.Compile( LOOP_OPEN_MATCH )
+	items := r.FindAllStringIndex( content, -1 )
+	return items;
+}
+
+func FindLoopCloseIndexes( content string ) [][]int {
+	r, _ := regexp.Compile( LOOP_CLOSE_MATCH )
 	items := r.FindAllStringIndex( content, -1 )
 	return items;
 }

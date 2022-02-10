@@ -16,8 +16,6 @@ func TestHasPartials( t *testing.T ) {
 	if match1 == true {
 		t.Errorf( "Has Partials Failed - Content 1" )
 	}
-
-
 }
 
 func TestHasKeys( t *testing.T ) {

@@ -3,6 +3,18 @@ import (
 	"strings"
 	"fmt"
 )
+
+type Loader struct {
+	config LoaderOptions
+	templateData []HTMLChunk
+	partialData []HTMLChunk
+}
+
+type PartialRaw struct {
+	matcher string
+	content string
+}
+
 /**
  * Returns Array of PartialRaw for the runtime to get ready to Load into a template
 **/
@@ -59,13 +71,30 @@ func ( loader *Loader ) preRender( name string ) string {
 
 func ( loader *Loader ) Template( name string, data []Input ) string {
 	content := loader.preRender( name )
-	fmt.Println( FindLoops( content ) )
 	hasKeys := HasKeys( content )
+	hasLoops := HasLoop( content )
 	if hasKeys == false {
 		return content
 	}
 	keys := FindKeys( content )
 	_keys := FindKeyIndexes( content )
+
+	if hasLoops != false {
+		loopOpens := FindLoopOpenIndexes( content )
+		loopCloses := FindLoopCloseIndexes( content )
+
+		if len( loopOpens ) == len( loopCloses ) {
+			for i, item := range loopOpens {
+				_close := loopCloses[i]
+
+				loopContent := content[ item[0]:_close[1] ]
+				fmt.Println( loopContent )
+			}
+		} else {
+			fmt.Println( "error" )
+		}
+		
+	}
 
 	for i, _ := range _keys {
 		keyName := FindKeyName( keys[i] );

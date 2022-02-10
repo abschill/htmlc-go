@@ -40,13 +40,6 @@ type HTMLChunk struct {
 	rawContent string
 }
 
-type Loader struct {
-	config LoaderOptions
-	templateData []HTMLChunk
-	partialData []HTMLChunk
-}
-
-type PartialRaw struct {
-	matcher string
-	content string
+type LoopMatch struct {
+	Open, Close int
 }
