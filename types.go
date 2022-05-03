@@ -4,42 +4,48 @@ package up
 * Main Loader Options
 **/
 type LoaderOptions struct {
-	base string
+	base      string
 	templates string
-	partials string
-	debug bool
-	watch bool
+	partials  string
+	debug     bool
+	watch     bool
 }
 
 const (
-	Single = 0
+	Single    = 0
 	MultiPart = 1
 )
 
 // @render-* input
 type Input struct {
-	Key string
+	Key   string
 	Value string
 }
 
 type ArrInput struct {
-	Key string
+	Key   string
 	Value []Input
 }
 
 // Template/Partial Input Object
 type InputFile struct {
-	name string
+	name      string
 	insertMap []Input
 }
 
 type HTMLChunk struct {
-	name string
-	path string
-	_type string
+	name       string
+	path       string
+	_type      string
 	rawContent string
 }
 
 type LoopMatch struct {
 	Open, Close int
+}
+
+//reserved
+type DebugOptions struct {
+	LogFile  string
+	LogLevel uint8
 }

@@ -1,13 +1,14 @@
 package up
+
 import (
-	"strings"
 	"fmt"
+	"strings"
 )
 
 type Loader struct {
-	config LoaderOptions
+	config       LoaderOptions
 	templateData []HTMLChunk
-	partialData []HTMLChunk
+	partialData  []HTMLChunk
 }
 
 type PartialRaw struct {
@@ -18,12 +19,12 @@ type PartialRaw struct {
 /**
  * Returns Array of PartialRaw for the runtime to get ready to Load into a template
 **/
-func ( loader *Loader ) loadPartials( matcher string, index int ) []PartialRaw {
-	_name := FindPartialFileName( matcher )
-	var partialsToLoad = make( []PartialRaw, len( loader.partialData ) )
+func (loader *Loader) loadPartials(matcher string, index int) []PartialRaw {
+	_name := FindPartialFileName(matcher)
+	var partialsToLoad = make([]PartialRaw, len(loader.partialData))
 	for _, p := range loader.partialData {
 		if p.name == _name {
-			partialsToLoad[index] = PartialRaw {
+			partialsToLoad[index] = PartialRaw{
 				matcher: matcher,
 				content: p.rawContent,
 			}
@@ -35,72 +36,72 @@ func ( loader *Loader ) loadPartials( matcher string, index int ) []PartialRaw {
 /**
  * Returns Template as a string with partials inserted (pre-render)
 **/
-func ( loader *Loader ) retrievePartials( content string ) string {
+func (loader *Loader) retrievePartials(content string) string {
 	temp := content
-	matches := HasPartials( content )
-	if matches != false {
-		items := FindPartials( content )
-		_items := FindPartialIndexes( content )
-		for i, _ := range _items {
-			todos := loader.loadPartials( items[i], i ) 
+	matches := HasPartials(content)
+	if matches {
+		items := FindPartials(content)
+		_items := FindPartialIndexes(content)
+		for i := range _items {
+			todos := loader.loadPartials(items[i], i)
 			for _, todo := range todos {
-				temp = strings.Replace( temp, todo.matcher, todo.content, -1 )
+				temp = strings.Replace(temp, todo.matcher, todo.content, -1)
 			}
 		}
-	}	
+	}
 	return temp
 }
 
 /**
  * Template Render Cycle ->
  * Pre Render & Render
- * TemplatePreRender handles pre-rendering partials into the template 
+ * TemplatePreRender handles pre-rendering partials into the template
  * TemplateRender handles rendering key/values into the template with it's partials preloaded
 **/
-func ( loader *Loader ) preRender( name string ) string {
-	fileName := NameHTML( name )
+func (loader *Loader) preRender(name string) string {
+	fileName := NameHTML(name)
 	for _, v := range loader.templateData {
 		if v.name == fileName {
-			rawContent := loader.retrievePartials( v.rawContent )
+			rawContent := loader.retrievePartials(v.rawContent)
 			return rawContent
 		}
 	}
 
-	panic( "No Template Match for" + fileName )
+	panic("No Template Match for" + fileName)
 }
 
-func ( loader *Loader ) Template( name string, data []Input ) string {
-	content := loader.preRender( name )
-	hasKeys := HasKeys( content )
-	hasLoops := HasLoop( content )
-	if hasKeys == false {
+func (loader *Loader) Template(name string, data []Input) string {
+	content := loader.preRender(name)
+	hasKeys := HasKeys(content)
+	hasLoops := HasLoop(content)
+	if !hasKeys {
 		return content
 	}
-	keys := FindKeys( content )
-	_keys := FindKeyIndexes( content )
+	keys := FindKeys(content)
+	_keys := FindKeyIndexes(content)
 
-	if hasLoops != false {
-		loopOpens := FindLoopOpenIndexes( content )
-		loopCloses := FindLoopCloseIndexes( content )
+	if hasLoops {
+		loopOpens := FindLoopOpenIndexes(content)
+		loopCloses := FindLoopCloseIndexes(content)
 
-		if len( loopOpens ) == len( loopCloses ) {
+		if len(loopOpens) == len(loopCloses) {
 			for i, item := range loopOpens {
 				_close := loopCloses[i]
 
-				loopContent := content[ item[0]:_close[1] ]
-				fmt.Println( loopContent )
+				loopContent := content[item[0]:_close[1]]
+				fmt.Println(loopContent)
 			}
 		} else {
-			fmt.Println( "error" )
+			fmt.Println("error")
 		}
-		
+
 	}
 
-	for i, _ := range _keys {
-		keyName := FindKeyName( keys[i] );
+	for i := range _keys {
+		keyName := FindKeyName(keys[i])
 		for _, input := range data {
 			if input.Key == keyName {
-				content = strings.Replace( content, keys[i], input.Value, -1 )
+				content = strings.Replace(content, keys[i], input.Value, -1)
 			}
 		}
 	}
