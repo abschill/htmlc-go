@@ -1,4 +1,4 @@
-package up
+package upv1
 
 import "testing"
 
