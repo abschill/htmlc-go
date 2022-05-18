@@ -1,0 +1,6 @@
+{
+	"config": {
+		"root": "static",
+		"chunks": "basic"
+	}
+}
