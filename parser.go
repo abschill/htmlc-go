@@ -2,10 +2,14 @@ package main
 
 import "strings"
 
-const HTMLC_OPEN_SCOPE = "<!--@htmlc|"
-const HTMLC_CLOSE_SCOPE = "|@htmlc-->"
+type TokenString = string
 
-type HTMLCToken interface{}
+const HTMLC_OPEN_SCOPE TokenString = "<!--@htmlc|"
+const HTMLC_CLOSE_SCOPE TokenString = "|@htmlc-->"
+
+type ParsableToken struct {
+	str TokenString
+}
 
 func getAllowedExtensions() []string {
 	return []string{
@@ -16,6 +20,6 @@ func getAllowedExtensions() []string {
 	}
 }
 
-func hasScope(content string) bool {
+func hasScope(content TokenString) bool {
 	return strings.Contains(content, HTMLC_OPEN_SCOPE)
 }
