@@ -5,15 +5,7 @@ import (
 	"path"
 )
 
-func defaultConfig() Config {
-	return Config{
-		"views", "chunks",
-	}
-}
-
-func findConfig(
-	ctx string,
-) {
+func findConfig(ctx string) {
 	contextFiles, err := ioutil.ReadDir(ctx)
 	check(err)
 	for _, file := range contextFiles {
@@ -25,5 +17,15 @@ func findConfig(
 				println(content)
 			}
 		}
+	}
+}
+
+func JoinPaths(base string, child string) string {
+	return path.Join(base, child)
+}
+
+func DefaultConfig() Config {
+	return Config{
+		"views", "chunks",
 	}
 }

@@ -4,24 +4,30 @@ import (
 	"fmt"
 	"io/fs"
 	"io/ioutil"
+	"os"
 	"path"
 )
 
-func check(
-	err error,
-) {
+func check(err error) {
 	if err != nil {
 		panic(err)
 	}
 }
 
-func printScopes(
-	staticPath string,
-	files []fs.FileInfo,
-) {
+func printArgs() {
+	argv := os.Args
+	argc := len(argv)
+	i := 1
+	for i < argc {
+		println(argv[i])
+		i++
+	}
+}
+
+func printScopes(root string, files []fs.FileInfo) {
 	for _, file := range files {
 		if !file.IsDir() {
-			filePath := path.Join(staticPath, file.Name())
+			filePath := path.Join(root, file.Name())
 			content, err := ioutil.ReadFile(filePath)
 			check(err)
 			println(filePath)
@@ -31,7 +37,7 @@ func printScopes(
 }
 
 func printVersionInfo() {
-	runtimeVersion := version{
+	runtimeVersion := Version{
 		0, 1, 1,
 	}
 	fmt.Printf("HTMLC Compiler Version: %d.%d.%d\n", runtimeVersion.Major, runtimeVersion.Minor, runtimeVersion.Patch)
