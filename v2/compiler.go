@@ -25,5 +25,4 @@ func main() {
 	printContextInfo(cwd, staticPath)
 	printScopes(staticPath, files)
 	check(err)
-
 }

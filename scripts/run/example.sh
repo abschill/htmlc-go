@@ -1,1 +1,0 @@
-cd example && go build -o test.exe && ./test
