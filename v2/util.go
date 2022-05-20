@@ -16,10 +16,7 @@ func findConfig(ctx string) ConfigFile {
 			if fname == "htmlc.json" {
 				content, err := ioutil.ReadFile(path.Join(ctx, fname))
 				check(err)
-
 				json.Unmarshal([]byte(content), &res)
-
-				check(err)
 			}
 		}
 	}
