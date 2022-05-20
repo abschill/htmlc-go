@@ -1,11 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"path"
 )
 
-func findConfig(ctx string) {
+func findConfig(ctx string) ConfigFile {
+	var res ConfigFile
 	contextFiles, err := ioutil.ReadDir(ctx)
 	check(err)
 	for _, file := range contextFiles {
@@ -14,10 +16,14 @@ func findConfig(ctx string) {
 			if fname == "htmlc.json" {
 				content, err := ioutil.ReadFile(path.Join(ctx, fname))
 				check(err)
-				println(content)
+
+				json.Unmarshal([]byte(content), &res)
+
+				check(err)
 			}
 		}
 	}
+	return res
 }
 
 func JoinPaths(base string, child string) string {

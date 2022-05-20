@@ -44,9 +44,7 @@ func printVersionInfo() {
 	println(getAllowedExtensions())
 }
 
-func printContextInfo(
-	args ...string,
-) {
+func printContextInfo(args ...string) {
 	i := 0
 	for i < len(args) {
 		println(args[i])
