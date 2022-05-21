@@ -8,8 +8,15 @@ import (
 	"reflect"
 )
 
+const pkgName = "main"
+
 func getType(x interface{}) string {
 	return reflect.TypeOf(x).String()
+}
+
+// prefixes the packge into the typename ie isType("Foo") checks "main.Foo" bc thats how go lang does it
+func isType(x interface{}, t string) bool {
+	return getType(x) == fmt.Sprintf("%s.%s", pkgName, t)
 }
 
 func GetVersionInfo() string {

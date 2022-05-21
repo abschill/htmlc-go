@@ -32,5 +32,5 @@ func main() {
 	config := getOptionsFSToConfig(fsOptions)
 	// create loader from the config
 	loader := CreateLoader(config, cwd)
-	println(getType(loader))
+	println(isType(loader, "HTMLCLoader"))
 }
