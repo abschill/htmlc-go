@@ -17,8 +17,10 @@ type HTMLCVersion struct {
 }
 
 type HTMLCConfig struct {
-	PathRoot  string `json: pathRoot`    // root path that your htmlc files will be in (relative to config)
-	ChunkRoot string `json: "chunkRoot"` // path to read in files for runtime / compiler
+	BasePath  string `json: "basePath"`  // root path that your htmlc files will be in (relative to config)
+	ChunkPath string `json: "chunkPath"` // path to read in files for runtime / compiler
+	WritePath string `json: "writePath"` // path to write any static files to
+	LogPath   string `json: "logPath"`
 }
 
 type HTMLCConfigFile = map[string]HTMLCConfig

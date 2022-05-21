@@ -1,6 +1,11 @@
 {
 	"config": {
-		"pathRoot": "static",
-		"chunkRoot": "basic"
+		"basePath": "static",
+		"chunkPath": "basic",
+		"writePath": "htmlc-out",
+		"logPath": "htmlc-log"
+	},
+	"data": {
+		"foo": "bar"
 	}
 }

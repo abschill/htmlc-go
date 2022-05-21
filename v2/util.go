@@ -4,9 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"os"
 	"path"
+	"reflect"
 )
+
+func getType(x interface{}) string {
+	return reflect.TypeOf(x).String()
+}
 
 func GetVersionInfo() string {
 	runtimeVersion := HTMLCVersion{
@@ -15,7 +19,7 @@ func GetVersionInfo() string {
 	return fmt.Sprintf("HTMLC Compiler Version: %d.%d.%d\n", runtimeVersion.Major, runtimeVersion.Minor, runtimeVersion.Patch)
 }
 
-func GetAllowedExtensions() []string {
+func GetValidExtensions() []string {
 	return []string{
 		".htm",
 		".html",
@@ -24,7 +28,7 @@ func GetAllowedExtensions() []string {
 	}
 }
 
-func GetConfig(ctx string) HTMLCConfigFile {
+func GetFSOptions(ctx string) HTMLCConfigFile {
 	var res HTMLCConfigFile
 	contextFiles, err := ioutil.ReadDir(ctx)
 	check(err)
@@ -41,33 +45,8 @@ func GetConfig(ctx string) HTMLCConfigFile {
 	return res
 }
 
-func GetProcessArgs() ProcessArgList {
-
-	validProcessArgs := KeyMap2D{
-		{"-c", "--config-file"},
-		{"-l", "--loader-file"},
-		{"-d", "--debug-file"},
-	}
-	var validOptions ProcessArgList
-	// iterate over validProcessArgs if the user has entered args inline, otherwise ignore
-
-	argv := os.Args
-	argc := len(argv)
-
-	if argc > 2 {
-		for i, arg := range argv {
-			for _, option := range validProcessArgs {
-				isMatch := option[0] == arg || option[1] == arg
-				if isMatch {
-					validOptions = append(validOptions, ProcessArg{
-						Key:   arg,
-						Value: argv[i+1],
-					})
-				}
-			}
-		}
-	}
-	return validOptions
+func getOptionsFSToConfig(config map[string]HTMLCConfig) HTMLCConfig {
+	return config["config"]
 }
 
 func JoinPaths(base string, child string) string {
@@ -76,7 +55,9 @@ func JoinPaths(base string, child string) string {
 
 func DefaultConfig() HTMLCConfig {
 	return HTMLCConfig{
-		PathRoot:  "views",
-		ChunkRoot: "chunks",
+		BasePath:  "views",
+		ChunkPath: "chunks",
+		WritePath: "htmlc-out",
+		LogPath:   "htmlc-log",
 	}
 }

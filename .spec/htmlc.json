@@ -1,0 +1,11 @@
+{
+	"config": {
+		"basePath": "static1",
+		"chunkPath": "basic1",
+		"writePath": "htmlc-out1",
+		"logPath": "htmlc-log1"
+	},
+	"data": {
+		"foo": "bar"
+	}
+}
