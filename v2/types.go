@@ -1,5 +1,15 @@
 package main
 
+type KeyList = []string
+type KeyMap2D = []KeyList
+
+type ProcessArg struct {
+	Key   string
+	Value string
+}
+
+type ProcessArgList = []ProcessArg
+
 type HTMLCVersion struct {
 	Major uint8
 	Minor uint8

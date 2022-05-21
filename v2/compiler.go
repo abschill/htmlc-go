@@ -4,13 +4,10 @@ import "os"
 
 func main() {
 
-	// this is our json file with the structed type
-
-	//staticPath := JoinPaths(cwd, "static/basic")
-	//
-
-	//PrintContextInfo(cwd, staticPath)
-	//PrintScopes(staticPath, files)
+	userArgs := GetProcessArgs()
+	if len(userArgs) > 0 {
+		println(userArgs[0].Key)
+	}
 
 	cwd, err := os.Getwd()
 	check(err)

@@ -1,6 +1,17 @@
 <!--@htmlc|
-    @render=(foo)
-	@loop=(bar){
 
+	htmlc will ignore whitespace or any comment data that remains outside of the ~ character open/closure
+	users may have 1 or many ~{}~ scopes inside an @htmlc block, and if you want the
+	comments around the marked sections to remain in tact you can enable it in the configuration options
+
+	~<section class="page-section">
+    <h4>@render=(section_title)</h4>
+	@loop=(section_items){
+		|<div>{item.name}</div>|;
+		|<b>{item.price}</b>|
 	}
+	</section>~
+
+
+
 |@htmlc-->
