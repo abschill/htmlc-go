@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/fs"
 	"io/ioutil"
 	"os"
@@ -14,7 +13,7 @@ func check(err error) {
 	}
 }
 
-func printArgs() {
+func (HTMLCDebugger) PrintArgs() {
 	argv := os.Args
 	argc := len(argv)
 	i := 1
@@ -24,27 +23,19 @@ func printArgs() {
 	}
 }
 
-func printScopes(root string, files []fs.FileInfo) {
+func (HTMLCDebugger) PrintScopes(root string, files []fs.FileInfo) {
 	for _, file := range files {
 		if !file.IsDir() {
 			filePath := path.Join(root, file.Name())
 			content, err := ioutil.ReadFile(filePath)
 			check(err)
 			println(filePath)
-			println("Has Scope: ", hasScope(string(content)))
+			println("Has Scope: ", HasScope(string(content)))
 		}
 	}
 }
 
-func printVersionInfo() {
-	runtimeVersion := Version{
-		0, 1, 1,
-	}
-	fmt.Printf("HTMLC Compiler Version: %d.%d.%d\n", runtimeVersion.Major, runtimeVersion.Minor, runtimeVersion.Patch)
-	println(getAllowedExtensions())
-}
-
-func printContextInfo(args ...string) {
+func (HTMLCDebugger) PrintContextInfo(args ...string) {
 	i := 0
 	for i < len(args) {
 		println(args[i])

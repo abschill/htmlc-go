@@ -1,6 +1,6 @@
 {
 	"config": {
-		"root": "static",
-		"chunks": "basic"
+		"pathRoot": "static",
+		"chunkRoot": "basic"
 	}
 }

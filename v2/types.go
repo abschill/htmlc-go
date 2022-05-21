@@ -1,14 +1,41 @@
 package main
 
-type Version struct {
+type HTMLCVersion struct {
 	Major uint8
 	Minor uint8
 	Patch uint8
 }
 
-type Config struct {
-	Root   string `json: "root"`   // root path that your htmlc files will be in (relative to config)
-	Chunks string `json: "chunks"` // path to read in files for runtime / compiler
+type HTMLCConfig struct {
+	PathRoot  string `json: pathRoot`    // root path that your htmlc files will be in (relative to config)
+	ChunkRoot string `json: "chunkRoot"` // path to read in files for runtime / compiler
 }
 
-type ConfigFile = map[string]Config
+type HTMLCConfigFile = map[string]HTMLCConfig
+
+type HTMLChunk struct {
+	ChunkType     string
+	FilePath      string
+	FileExtension string
+	IsStatic      bool
+	IsValid       bool
+	AsRaw         string
+	AsRender      string
+}
+
+type HTMLCLoader struct {
+	ProcessPath    string      `json: "process_path"`
+	Config         HTMLCConfig `json: "config"`
+	ResolvedChunks []HTMLChunk
+	CallableChunks []HTMLChunk
+}
+
+type TokenString = string
+
+type HTMLCToken struct {
+	Signature TokenString
+}
+
+type HTMLCDebugger struct {
+	Loader HTMLCLoader
+}

@@ -2,12 +2,20 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"path"
 )
 
-func findConfig(ctx string) ConfigFile {
-	var res ConfigFile
+func GetVersionInfo() string {
+	runtimeVersion := HTMLCVersion{
+		0, 1, 1,
+	}
+	return fmt.Sprintf("HTMLC Compiler Version: %d.%d.%d\n", runtimeVersion.Major, runtimeVersion.Minor, runtimeVersion.Patch)
+}
+
+func GetConfig(ctx string) HTMLCConfigFile {
+	var res HTMLCConfigFile
 	contextFiles, err := ioutil.ReadDir(ctx)
 	check(err)
 	for _, file := range contextFiles {
@@ -27,8 +35,8 @@ func JoinPaths(base string, child string) string {
 	return path.Join(base, child)
 }
 
-func DefaultConfig() Config {
-	return Config{
+func DefaultConfig() HTMLCConfig {
+	return HTMLCConfig{
 		"views", "chunks",
 	}
 }

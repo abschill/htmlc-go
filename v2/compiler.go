@@ -1,21 +1,22 @@
 package main
 
-import (
-	"io/ioutil"
-	"os"
-)
+import "os"
 
 func main() {
-	cwd, err := os.Getwd()
-	check(err)
 
 	// this is our json file with the structed type
-	configJSON := findConfig(cwd)
-	staticPath := JoinPaths(cwd, "static/basic")
-	files, err := ioutil.ReadDir(staticPath)
-	check(err)
-	printContextInfo(cwd, staticPath)
-	printScopes(staticPath, files)
 
-	println(configJSON["config"].Root)
+	//staticPath := JoinPaths(cwd, "static/basic")
+	//
+
+	//PrintContextInfo(cwd, staticPath)
+	//PrintScopes(staticPath, files)
+
+	cwd, err := os.Getwd()
+	check(err)
+	configJSON := GetConfig(cwd)
+	// check(err)
+	configStruct := configJSON["config"]
+	loader := CreateLoader(configStruct, cwd)
+	println(loader.ProcessPath)
 }
