@@ -1,25 +1,30 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"path"
 	"reflect"
 )
 
+type HTMLCInternal = interface {
+	GetType() string
+	IsType() bool
+	GetVersion()
+	GetValidExtensions() []string
+	GetValidProcessArgs() KeyMap2D
+}
+
 const pkgName = "main"
 
-func getType(x interface{}) string {
+func GetType(x interface{}) string {
 	return reflect.TypeOf(x).String()
 }
 
 // prefixes the packge into the typename ie isType("Foo") checks "main.Foo" bc thats how go lang does it
-func isType(x interface{}, t string) bool {
-	return getType(x) == fmt.Sprintf("%s.%s", pkgName, t)
+func IsType(x interface{}, t string) bool {
+	return GetType(x) == fmt.Sprintf("%s.%s", pkgName, t)
 }
 
-func GetVersionInfo() string {
+func GetVersion() string {
 	runtimeVersion := HTMLCVersion{
 		0, 1, 1,
 	}
@@ -35,36 +40,19 @@ func GetValidExtensions() []string {
 	}
 }
 
-func GetFSOptions(ctx string) HTMLCConfigFile {
-	var res HTMLCConfigFile
-	contextFiles, err := ioutil.ReadDir(ctx)
-	check(err)
-	for _, file := range contextFiles {
-		if !file.IsDir() {
-			fname := file.Name()
-			if fname == "htmlc.json" {
-				content, err := ioutil.ReadFile(path.Join(ctx, fname))
-				check(err)
-				json.Unmarshal([]byte(content), &res)
-			}
-		}
-	}
-	return res
-}
-
-func getOptionsFSToConfig(config map[string]HTMLCConfig) HTMLCConfig {
-	return config["config"]
-}
-
-func JoinPaths(base string, child string) string {
-	return path.Join(base, child)
-}
-
-func DefaultConfig() HTMLCConfig {
-	return HTMLCConfig{
-		BasePath:  "views",
-		ChunkPath: "chunks",
-		WritePath: "htmlc-out",
-		LogPath:   "htmlc-log",
+func GetValidProcessArgs() KeyMap2D {
+	return KeyMap2D{
+		{
+			"-c",
+			"--config-file",
+		},
+		{
+			"-l",
+			"--loader-file",
+		},
+		{
+			"-d",
+			"--debug-file",
+		},
 	}
 }

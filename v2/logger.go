@@ -9,13 +9,17 @@ import (
 	"github.com/fatih/color"
 )
 
+type HTMLCLogger struct {
+	Loader HTMLCLoader
+}
+
 func check(err error) {
 	if err != nil {
 		panic(err)
 	}
 }
 
-func (HTMLCDebugger) PrintArgs() {
+func (HTMLCLogger) PrintArgs() {
 	argv := os.Args
 	argc := len(argv)
 	i := 1
@@ -25,7 +29,7 @@ func (HTMLCDebugger) PrintArgs() {
 	}
 }
 
-func (HTMLCDebugger) PrintScopes(root string, files []fs.FileInfo) {
+func (HTMLCLogger) PrintScopes(root string, files []fs.FileInfo) {
 	for _, file := range files {
 		if !file.IsDir() {
 			filePath := path.Join(root, file.Name())
@@ -38,7 +42,7 @@ func (HTMLCDebugger) PrintScopes(root string, files []fs.FileInfo) {
 	}
 }
 
-func (HTMLCDebugger) PrintContextInfo(args ...string) {
+func (HTMLCLogger) PrintContextInfo(args ...string) {
 	i := 0
 	for i < len(args) {
 		color.Blue("%s\n", args[i])
@@ -48,4 +52,10 @@ func (HTMLCDebugger) PrintContextInfo(args ...string) {
 
 func PrintArg(k string, v string) {
 	color.Green("%s: %s", k, v)
+}
+
+func PrintLoader(loader HTMLCLoader) {
+	//todo
+	color.Green("%s: \n", "Resolved Chunk Path:")
+	println(path.Join(loader.ProcessPath, loader.Config.BasePath, loader.Config.ChunkPath))
 }

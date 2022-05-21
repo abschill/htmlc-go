@@ -1,8 +1,11 @@
 package main
 
-import (
-	"os"
-)
+type HTMLCLoader struct {
+	ProcessPath    string      `json:"processPath"`
+	Config         HTMLCConfig `json:"config"`
+	ResolvedChunks []HTMLChunk
+	CallableChunks []HTMLChunk
+}
 
 // todo - set up chunk finder, determine which ones are valid syntax and add them to callable chunks
 func CreateLoader(config HTMLCConfig, processPath string) HTMLCLoader {
@@ -12,25 +15,4 @@ func CreateLoader(config HTMLCConfig, processPath string) HTMLCLoader {
 		ResolvedChunks: nil,
 		CallableChunks: nil,
 	}
-}
-
-func main() {
-	userArgs := GetProcessArgs()
-	cwd, err := os.Getwd()
-	check(err)
-	if len(userArgs) > 0 {
-		for _, arg := range userArgs {
-			if arg.Key == "configPath" {
-				cwd = arg.Value
-			}
-		}
-	}
-
-	// this gets the full config file with .config as a property
-	fsOptions := GetFSOptions(cwd)
-	// get .config property from full file options
-	config := getOptionsFSToConfig(fsOptions)
-	// create loader from the config
-	loader := CreateLoader(config, cwd)
-	println(isType(loader, "HTMLCLoader"))
 }
