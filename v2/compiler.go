@@ -1,12 +1,16 @@
 package main
 
-import "os"
+import (
+	"os"
+)
 
 func main() {
 
 	userArgs := GetProcessArgs()
 	if len(userArgs) > 0 {
-		println(userArgs[0].Key)
+		for _, arg := range userArgs {
+			PrintArg(arg.Key, arg.Value)
+		}
 	}
 
 	cwd, err := os.Getwd()
