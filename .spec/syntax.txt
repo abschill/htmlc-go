@@ -1,0 +1,28 @@
+(*branches*)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+chunk_macro_prefix		 	 = '~'
+chunk_macro_option			 = 'page' | 'chunk'
+chunk_macro 				 = chunk_macro_prefix, chunk_macro_option
+
+token_directive_open 		 = '('
+token_directive_close 		 = ')'
+
+token_directive_enforce		 = '!'
+token_directive_try		 	 = '?'
+token_directive_null		 = ''
+token_directive_handletype   = token_directive_null | token_directive_try | token_directive_enforce
+
+token_directive_render 		 = '#render'
+
+{token_directive} 			 = token_directive_handletype, token_directive_open, ..., token_directive_close
+
+
+(* scope tokens to act as a tree builder*)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+html_comment_open			 = '<!--';
+html_comment_close			 = '-->';
+htmlc_scope_open 			 =  html_comment_open, '@htmlc|'
+htmlc_scope_close 			 = '|@htmlc', html_comment_close
+
+htmlc_chunk 			     = html_comment_open, htmlc_scope_open, chunk_macro, list({token_directive}), htmlc_scope_close, htmlc_comment_close

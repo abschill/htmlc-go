@@ -1,0 +1,11 @@
+<!--@htmlc|~page
+
+	if foo exists, render it ? otherwise just remove
+	(?#render=foo)
+
+	if foo doesnt exist, render a 404 template or throw an error depending on preferences
+	(!#render=foo)
+
+	just dont try anything special
+	(#render=foo)
+|@htmlc-->
