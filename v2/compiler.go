@@ -1,5 +1,6 @@
 package main
 
-func CompileTokenMap() {
+func CreateAST(chunk HTMLChunk) {
 	// take parser result and compile output - todo
+
 }

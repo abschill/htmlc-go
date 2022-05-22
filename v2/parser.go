@@ -8,6 +8,19 @@ func HasScope(content string) bool {
 
 // todo - find errors preemptively in syntax to validate
 func ValidSyntax(content string) bool {
+	openSig := GetTokenName("HTML_OC_SCOPE").Signature
+	closeSig := GetTokenName("HTML_CC_SCOPE").Signature
+	if strings.Contains(content, openSig) {
+		// no closing signature to match the opened scope
+		if !strings.Contains(content, closeSig) {
+			return false
+		}
+		// scope improperly ordered
+		if strings.Index(content, openSig) > strings.Index(content, closeSig) {
+			return false
+		}
+	}
+	// todo - validate more than just that
 	return true
 }
 

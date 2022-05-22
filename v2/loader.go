@@ -42,7 +42,6 @@ func CreateLoader(config HTMLCConfig, processPath string) HTMLCLoader {
 						IsStatic:      !HasScope(content),
 						IsValid:       isValid,
 						AsRaw:         content,
-						AsRender:      content,
 					}
 					rChunks = append(rChunks, theChunk)
 					if isValid {

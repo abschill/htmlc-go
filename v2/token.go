@@ -53,6 +53,16 @@ func List() []HTMLCToken {
 	}
 }
 
+func GetTokenName(tag string) HTMLCToken {
+	var matcher HTMLCToken
+	for _, token := range List() {
+		if token.Name == tag {
+			matcher = token
+		}
+	}
+	return matcher
+}
+
 func (t HTMLCToken) IsIn(input string) bool {
 	return strings.Contains(input, t.Signature)
 }
