@@ -14,25 +14,23 @@ const (
 	IEND   IType = "end"   // end the html chunk scope
 )
 
-type HTMLCTokenList interface {
-	Get()
+type HTMLCTokens interface {
+	List()
 }
 
-var HTMLC_TOKENS = []HTMLCToken{
-	tokenize("HTML_OC_SCOPE", "<!--@htmlc|", ISTART),
-	tokenize("HTML_CC_SCOPE", "|@htmlc-->", IEND),
-	tokenize("HTMLC_CM_PREFIX", "~", _ISET),
-	tokenize("HTMLC_TD_OSCOPE", "(", IOPEN),
-	tokenize("HTMLC_TD_CSCOPE", ")", ICLOSE),
-	tokenize("HTMLC_TD_RENDER", "#render", ICALL),
-	tokenize("HTMLC_TD_CHUNK", "#chunk", ICALL),
-	tokenize("HTMLC_TO_SET", "=", ISET),
-	tokenize("HTMLC_TD_ENFORCE", "!", IWRAP),
-	tokenize("HTMLC_TD_TRY", "?", IWRAP),
-}
-
-func Get() []HTMLCToken {
-	return HTMLC_TOKENS
+func List() []HTMLCToken {
+	return []HTMLCToken{
+		tokenize("HTML_OC_SCOPE", "<!--@htmlc|", ISTART),
+		tokenize("HTML_CC_SCOPE", "|@htmlc-->", IEND),
+		tokenize("HTMLC_CM_PREFIX", "~", _ISET),
+		tokenize("HTMLC_TD_OSCOPE", "(", IOPEN),
+		tokenize("HTMLC_TD_CSCOPE", ")", ICLOSE),
+		tokenize("HTMLC_TD_RENDER", "#render", ICALL),
+		tokenize("HTMLC_TD_CHUNK", "#chunk", ICALL),
+		tokenize("HTMLC_TO_SET", "=", ISET),
+		tokenize("HTMLC_TD_ENFORCE", "!", IWRAP),
+		tokenize("HTMLC_TD_TRY", "?", IWRAP),
+	}
 }
 
 type HTMLCToken struct {
