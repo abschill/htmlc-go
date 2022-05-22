@@ -21,6 +21,7 @@ func CreateLoader(config HTMLCConfig, processPath string) HTMLCLoader {
 	var cChunks []HTMLChunk
 	chunkPath := path.Join(processPath, config.BasePath, config.ChunkPath)
 	files, err := ioutil.ReadDir(chunkPath)
+	check(err)
 	for _, file := range files {
 		fValid := false
 		// todo - set up path discovery sometime
@@ -51,8 +52,6 @@ func CreateLoader(config HTMLCConfig, processPath string) HTMLCLoader {
 			}
 		}
 	}
-
-	check(err)
 	return HTMLCLoader{
 		ProcessPath: processPath,
 		Config: HTMLCConfig{
