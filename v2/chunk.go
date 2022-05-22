@@ -22,6 +22,8 @@ type HTMLChunk struct {
 
 func (chunk HTMLChunk) Print() {
 	color.Yellow("Type: %s\nName: %s", chunk.ChunkType, chunk.ChunkName)
-	color.HiGreenString("Raw Content: ")
+	color.Green("Raw Content: ")
 	println(chunk.AsRaw)
+	color.Magenta("Scoped Bounds:")
+	println(ResolveNextScopeBounds(chunk.AsRaw))
 }

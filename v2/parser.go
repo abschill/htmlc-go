@@ -1,6 +1,8 @@
 package main
 
-import "strings"
+import (
+	"strings"
+)
 
 func HasScope(content string) bool {
 	return strings.Contains(content, GetTokenName("HTML_OC_SCOPE").Signature)
@@ -34,3 +36,12 @@ TODO:
 	- for each token in each scope, determine the method of replacement for the token, based on the decision tree that we need to rewrite in backus naur form from the js concept
 
 **/
+
+// gets a tuple for the bounds of the (first) scope in the input
+func ResolveNextScopeBounds(chunkRaw string) []int {
+	openSig := GetTokenName("HTML_OC_SCOPE").Signature
+	closeSig := GetTokenName("HTML_CC_SCOPE").Signature
+	headIndex := strings.Index(chunkRaw, openSig)
+	tailIndex := strings.Index(chunkRaw, closeSig)
+	return []int{headIndex, tailIndex}
+}

@@ -10,3 +10,15 @@
 
 
 |@htmlc-->
+<!--@htmlc|
+
+	<section class="page-section">
+		<h4>@render=(section_title)</h4>
+		@loop=(section_items){
+			|<div>{item.name}</div>|;
+			|<b>{item.price}</b>|
+		}
+	</section>
+
+
+|@htmlc-->
