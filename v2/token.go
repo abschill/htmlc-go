@@ -18,21 +18,6 @@ type HTMLCTokens interface {
 	List()
 }
 
-func List() []HTMLCToken {
-	return []HTMLCToken{
-		tokenize("HTML_OC_SCOPE", "<!--@htmlc|", ISTART),
-		tokenize("HTML_CC_SCOPE", "|@htmlc-->", IEND),
-		tokenize("HTMLC_CM_PREFIX", "~", _ISET),
-		tokenize("HTMLC_TD_OSCOPE", "(", IOPEN),
-		tokenize("HTMLC_TD_CSCOPE", ")", ICLOSE),
-		tokenize("HTMLC_TD_RENDER", "#render", ICALL),
-		tokenize("HTMLC_TD_CHUNK", "#chunk", ICALL),
-		tokenize("HTMLC_TO_SET", "=", ISET),
-		tokenize("HTMLC_TD_ENFORCE", "!", IWRAP),
-		tokenize("HTMLC_TD_TRY", "?", IWRAP),
-	}
-}
-
 type HTMLCToken struct {
 	Name            string
 	Signature       string
@@ -49,6 +34,21 @@ type HTMLCResolvedToken struct {
 	EndCol    int
 	FromScope string
 	FromChunk string
+}
+
+func List() []HTMLCToken {
+	return []HTMLCToken{
+		tokenize("HTML_OC_SCOPE", "<!--@htmlc|", ISTART),
+		tokenize("HTML_CC_SCOPE", "|@htmlc-->", IEND),
+		tokenize("HTMLC_CM_PREFIX", "~", _ISET),
+		tokenize("HTMLC_TD_OSCOPE", "(", IOPEN),
+		tokenize("HTMLC_TD_CSCOPE", ")", ICLOSE),
+		tokenize("HTMLC_TD_RENDER", "#render", ICALL),
+		tokenize("HTMLC_TD_CHUNK", "#chunk", ICALL),
+		tokenize("HTMLC_TO_SET", "=", ISET),
+		tokenize("HTMLC_TD_ENFORCE", "!", IWRAP),
+		tokenize("HTMLC_TD_TRY", "?", IWRAP),
+	}
 }
 
 // todo
