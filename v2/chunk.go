@@ -23,7 +23,19 @@ type HTMLChunk struct {
 func (chunk HTMLChunk) Print() {
 	color.Yellow("Type: %s\nName: %s", chunk.ChunkType, chunk.ChunkName)
 	color.Green("Raw Content: ")
-	println(chunk.AsRaw)
 	color.Magenta("Scoped Bounds:")
-	println(ResolveNextScopeBounds(chunk.AsRaw))
+	scopeBounds := ResolveNextScopeBounds(chunk.AsRaw)
+
+	if scopeBounds[1] > -1 {
+		println("scope 1~~~~~~~~~~~~")
+		println(chunk.AsRaw[scopeBounds[0]:])
+		var subTest string
+		// close scope signature
+		eSig := GetTokenName("HTML_CC_SCOPE").Signature
+		offset := (scopeBounds[1] + len(eSig))
+		subTest = chunk.AsRaw[offset:]
+		println("scope 2~~~~~~~~~~~~")
+		println(subTest)
+	}
+
 }

@@ -16,10 +16,6 @@ const (
 	IEND   IType = "end"   // end the html chunk scope
 )
 
-type HTMLCTokens interface {
-	List()
-}
-
 type HTMLCToken struct {
 	Name            string
 	Signature       string
@@ -38,24 +34,27 @@ type HTMLCResolvedToken struct {
 	FromChunk string
 }
 
+var RawList = []HTMLCToken{
+	tokenize("HTML_OC_SCOPE", "<!--@htmlc|", ISTART),
+	tokenize("HTML_CC_SCOPE", "|@htmlc-->", IEND),
+	tokenize("HTMLC_CM_PREFIX", "~", _ISET),
+	tokenize("HTMLC_TD_OSCOPE", "(", IOPEN),
+	tokenize("HTMLC_TD_CSCOPE", ")", ICLOSE),
+	tokenize("HTMLC_TD_RENDER", "#render", ICALL),
+	tokenize("HTMLC_TD_CHUNK", "#chunk", ICALL),
+	tokenize("HTMLC_TO_SET", "=", ISET),
+	tokenize("HTMLC_TD_ENFORCE", "!", IWRAP),
+	tokenize("HTMLC_TD_TRY", "?", IWRAP),
+}
+
 func List() []HTMLCToken {
-	return []HTMLCToken{
-		tokenize("HTML_OC_SCOPE", "<!--@htmlc|", ISTART),
-		tokenize("HTML_CC_SCOPE", "|@htmlc-->", IEND),
-		tokenize("HTMLC_CM_PREFIX", "~", _ISET),
-		tokenize("HTMLC_TD_OSCOPE", "(", IOPEN),
-		tokenize("HTMLC_TD_CSCOPE", ")", ICLOSE),
-		tokenize("HTMLC_TD_RENDER", "#render", ICALL),
-		tokenize("HTMLC_TD_CHUNK", "#chunk", ICALL),
-		tokenize("HTMLC_TO_SET", "=", ISET),
-		tokenize("HTMLC_TD_ENFORCE", "!", IWRAP),
-		tokenize("HTMLC_TD_TRY", "?", IWRAP),
-	}
+	return RawList
 }
 
 func GetTokenName(tag string) HTMLCToken {
 	var matcher HTMLCToken
-	for _, token := range List() {
+
+	for _, token := range RawList {
 		if token.Name == tag {
 			matcher = token
 		}
