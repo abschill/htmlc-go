@@ -1,28 +1,38 @@
+(*aliases within this document*)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+CM = chunk macro
+TD = token directive
+TO = token operator
+H = html
+HC = htmlc
+
 (*branches*)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-chunk_macro_prefix		 	 = '~'
-chunk_macro_option			 = 'page' | 'chunk'
-chunk_macro 				 = chunk_macro_prefix, chunk_macro_option
+CM_prefix       = '~'
+CM_option       = ('page' | 'chunk')
+<CM>           := (CM_prefix, CM_option)
 
-token_directive_open 		 = '('
-token_directive_close 		 = ')'
+TD_open         = '('
+TD_close        = ')'
 
-token_directive_enforce		 = '!'
-token_directive_try		 	 = '?'
-token_directive_null		 = ''
-token_directive_handletype   = token_directive_null | token_directive_try | token_directive_enforce
+TD_enforce      = '!'
+TD_try		 	= '?'
+TD_null		    = ''
+TD_handletype   = (TD_null | TD_try | TD_enforce)
 
-token_directive_render 		 = '#render'
+TD_render 		= '#render'
+TD_chunk        = '#chunk'
 
-{token_directive} 			 = token_directive_handletype, token_directive_open, ..., token_directive_close
+TO_set          = '='
+
+<TD>           := (TD_handletype, TD_open, ..., TD_close)
 
 
 (* scope tokens to act as a tree builder*)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-html_comment_open			 = '<!--';
-html_comment_close			 = '-->';
-htmlc_scope_open 			 =  html_comment_open, '@htmlc|'
-htmlc_scope_close 			 = '|@htmlc', html_comment_close
-
-htmlc_chunk 			     = html_comment_open, htmlc_scope_open, chunk_macro, list({token_directive}), htmlc_scope_close, htmlc_comment_close
+H_comment_open			 = '<!--';
+H_comment_close			 = '-->';
+HC_scope_open 			 =  (html_comment_open, '@htmlc|')
+HC_scope_close 			 =  ('|@htmlc', html_comment_close)
+<HC_chunk>			    := (H_comment_open, HC_scope_open, CM, []<token_directive>, htmlc_scope_close, htmlc_comment_close)

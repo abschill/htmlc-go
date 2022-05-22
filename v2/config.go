@@ -7,6 +7,7 @@ import (
 	"path"
 )
 
+type HTMLCConfigFile = map[string]HTMLCConfig
 type ProcessArg struct {
 	Key   string
 	Value string
