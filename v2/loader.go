@@ -23,31 +23,29 @@ func CreateLoader(config HTMLCConfig, processPath string) HTMLCLoader {
 	files, err := ioutil.ReadDir(chunkPath)
 	check(err)
 	for _, file := range files {
-		fValid := false
 		// todo - set up path discovery sometime
 		if !file.IsDir() {
 			fname := file.Name()
 			// todo - iterate over standalone extension types
 			if strings.Contains(fname, ".html") {
-				if !fValid {
-					fValid = true
-					fpath := path.Join(chunkPath, fname)
-					fbytes, err := ioutil.ReadFile(fpath)
-					check(err)
-					// println(fname)
-					content := string(fbytes)
-					isValid := ValidSyntax(content)
-					theChunk := HTMLChunk{
-						FilePath:      fpath,
-						FileExtension: strings.Split(fname, ".")[1],
-						IsStatic:      !HasScope(content),
-						IsValid:       isValid,
-						AsRaw:         content,
-					}
-					rChunks = append(rChunks, theChunk)
-					if isValid {
-						cChunks = append(cChunks, theChunk)
-					}
+				fpath := path.Join(chunkPath, fname)
+				fbytes, err := ioutil.ReadFile(fpath)
+				check(err)
+				content := string(fbytes)
+				isValid := ValidSyntax(content)
+				splitName := strings.Split(fname, ".")
+				theChunk := HTMLChunk{
+					ChunkType:     "chunk",
+					ChunkName:     splitName[0],
+					FilePath:      fpath,
+					FileExtension: splitName[1],
+					IsStatic:      !HasScope(content),
+					IsValid:       isValid,
+					AsRaw:         content,
+				}
+				rChunks = append(rChunks, theChunk)
+				if isValid {
+					cChunks = append(cChunks, theChunk)
 				}
 			}
 		}
@@ -65,9 +63,9 @@ func CreateLoader(config HTMLCConfig, processPath string) HTMLCLoader {
 
 func (loader HTMLCLoader) Print() {
 	//todo
-	color.Green("%s: \n", "Resolved Chunk Path")
-	println(loader.Config.ChunkPath)
-	color.Blue("%s\n", "Chunks Found:")
-	println(loader.ResolvedChunks[0].AsRaw)
+	color.HiBlue("%s: %s", "Resolved Chunk Path", loader.Config.ChunkPath)
 
+	for _, chunk := range loader.ResolvedChunks {
+		chunk.Print()
+	}
 }

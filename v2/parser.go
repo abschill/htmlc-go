@@ -3,7 +3,7 @@ package main
 import "strings"
 
 func HasScope(content string) bool {
-	return strings.Contains(content, "@htmlc")
+	return strings.Contains(content, GetTokenName("HTML_OC_SCOPE").Signature)
 }
 
 // todo - find errors preemptively in syntax to validate

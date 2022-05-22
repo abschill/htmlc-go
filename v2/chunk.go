@@ -1,11 +1,17 @@
 package main
 
-import (
-	"io/ioutil"
+import "github.com/fatih/color"
+
+type HTMLChunkType string
+
+const (
+	Chunk HTMLChunkType = "chunk"
+	Page  HTMLChunkType = "page"
 )
 
 type HTMLChunk struct {
-	ChunkType     string
+	ChunkType     HTMLChunkType
+	ChunkName     string
 	FilePath      string
 	FileExtension string
 	IsStatic      bool
@@ -14,13 +20,8 @@ type HTMLChunk struct {
 	AsRender      string
 }
 
-func RegisterChunk(chunkPath string) HTMLChunk {
-	file, err := ioutil.ReadFile(chunkPath)
-	cString := string(file)
-	check(err)
-	println(cString)
-	return HTMLChunk{
-		FilePath: chunkPath,
-		AsRaw:    cString,
-	}
+func (chunk HTMLChunk) Print() {
+	color.Yellow("Type: %s\nName: %s", chunk.ChunkType, chunk.ChunkName)
+	color.HiGreenString("Raw Content: ")
+	println(chunk.AsRaw)
 }
