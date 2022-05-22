@@ -5,9 +5,17 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+
+	"github.com/fatih/color"
 )
 
-type HTMLCConfigFile = map[string]HTMLCConfig
+type GUserInput = map[string]interface{}
+
+type HTMLCConfigFile struct {
+	Config HTMLCConfig `json:"config"`
+	Data   GUserInput  `json:"data"`
+}
+
 type ProcessArg struct {
 	Key   string
 	Value string
@@ -52,8 +60,13 @@ func GetProcessArgs() ProcessArgList {
 	return validOptions
 }
 
+// print key/val pair from args
+func PrintTuple(k string, v string) {
+	color.Green("%s: %s", k, v)
+}
+
 // get options file as unmarshalled JSON
-func GetFSOptions(ctx string) HTMLCConfigFile {
+func getFSOptions(ctx string) HTMLCConfigFile {
 	var res HTMLCConfigFile
 	contextFiles, err := ioutil.ReadDir(ctx)
 	check(err)
@@ -71,8 +84,12 @@ func GetFSOptions(ctx string) HTMLCConfigFile {
 }
 
 // get config object as struct from unmarshalled config file
-func getOptionsFSToConfig(config map[string]HTMLCConfig) HTMLCConfig {
-	return config["config"]
+func (config HTMLCConfigFile) getOptionsFSToConfig() HTMLCConfig {
+	return config.Config
+}
+
+func (config HTMLCConfigFile) getOptionsFSToInput() GUserInput {
+	return config.Data
 }
 
 // get default config options

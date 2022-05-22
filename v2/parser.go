@@ -6,6 +6,11 @@ func HasScope(content string) bool {
 	return strings.Contains(content, "@htmlc")
 }
 
+// todo - find errors preemptively in syntax to validate
+func ValidSyntax(content string) bool {
+	return true
+}
+
 /**
 TODO:
 1. for inputs that established a valid scope and are non-static, determine the following:

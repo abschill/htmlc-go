@@ -1,5 +1,7 @@
 package main
 
+import "strings"
+
 type IType string
 
 const (
@@ -51,13 +53,12 @@ func List() []HTMLCToken {
 	}
 }
 
-// todo
-func (HTMLCToken) Exists() bool {
-	return false
+func (t HTMLCToken) IsIn(input string) bool {
+	return strings.Contains(input, t.Signature)
 }
 
 // todo
-func (HTMLCToken) Get(input string) HTMLCResolvedToken {
+func (HTMLCToken) GetFrom(input string) HTMLCResolvedToken {
 	return HTMLCResolvedToken{}
 }
 
@@ -68,6 +69,7 @@ func (HTMLCToken) Replace() string {
 	return output
 }
 
+// internal struct mapping
 func tokenize(name string, sig string, t IType) HTMLCToken {
 	return HTMLCToken{
 		Name:            name,

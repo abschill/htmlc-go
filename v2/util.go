@@ -14,15 +14,15 @@ type HTMLCVersion struct {
 	Patch uint8
 }
 
-type HTMLCInternal = interface {
-	GetType() string
-	IsType() bool
-	GetVersion()
-	GetValidExtensions() []string
-	GetValidProcessArgs() KeyMap2D
-}
+type HTMLCUtils struct{}
 
 const pkgName = "main"
+
+func check(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
 
 func GetType(x interface{}) string {
 	return reflect.TypeOf(x).String()

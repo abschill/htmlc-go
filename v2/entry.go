@@ -15,10 +15,10 @@ func main() {
 	}
 
 	// this gets the full config file with .config as a property
-	fsOptions := GetFSOptions(cwd)
+	fsOptions := getFSOptions(cwd)
 	// get .config property from full file options
-	config := getOptionsFSToConfig(fsOptions)
+	config := fsOptions.getOptionsFSToConfig()
 	// create loader from the config
 	loader := CreateLoader(config, cwd)
-	PrintLoader(loader)
+	loader.Print()
 }
