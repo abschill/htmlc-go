@@ -29,6 +29,7 @@ func (chunk HTMLChunk) Print() {
 	if scopeBounds[1] > -1 {
 		println("scope 1~~~~~~~~~~~~")
 		println(chunk.AsRaw[scopeBounds[0]:])
+		println("~~~~~~~~~~~~")
 		var subTest string
 		// close scope signature
 		eSig := GetTokenName("HTML_CC_SCOPE").Signature
@@ -36,6 +37,11 @@ func (chunk HTMLChunk) Print() {
 		subTest = chunk.AsRaw[offset:]
 		println("scope 2~~~~~~~~~~~~")
 		println(subTest)
+		println("~~~~~~~~~~~~")
+	} else {
+		println("static scope~~~~~~~~~~~~")
+		println(chunk.AsRaw)
+		println("~~~~~~~~~~~~")
 	}
 
 }

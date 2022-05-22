@@ -1,6 +1,6 @@
 {
 	"config": {
-		"basePath": "static1",
+		"basePath": "../static",
 		"chunkPath": "basic1",
 		"writePath": "htmlc-out1",
 		"logPath": "htmlc-log1"

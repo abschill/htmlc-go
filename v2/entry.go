@@ -8,7 +8,8 @@ func main() {
 	check(err)
 	if len(userArgs) > 0 {
 		for _, arg := range userArgs {
-			if arg.Key == "configPath" {
+			switch arg.Key {
+			case "configPath":
 				cwd = arg.Value
 			}
 		}
