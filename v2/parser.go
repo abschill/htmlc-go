@@ -4,6 +4,12 @@ import (
 	"strings"
 )
 
+type HTMLCScope struct {
+	Parent HTMLChunk
+	Outer  string
+	Inner  string
+}
+
 func HasScope(content string) bool {
 	return strings.Contains(content, GetTokenName("HTML_OC_SCOPE").Signature)
 }
@@ -37,11 +43,30 @@ TODO:
 
 **/
 
-// gets a tuple for the bounds of the (first) scope in the input
-func ResolveNextScopeBounds(chunkRaw string) []int {
-	openSig := GetTokenName("HTML_OC_SCOPE").Signature
-	closeSig := GetTokenName("HTML_CC_SCOPE").Signature
-	headIndex := strings.Index(chunkRaw, openSig)
-	tailIndex := strings.Index(chunkRaw, closeSig)
-	return []int{headIndex, tailIndex}
-}
+// when we get the scope of HTMLC within the html comment we want to get it as a full scope first, this will trim the closures from that initial scope that is retrieved to begin to compile the output
+// func (s HTMLCScope) ToList() {
+// 	var buf string
+// 	//var output string
+// 	openSig := GetTokenName("HTML_OC_SCOPE").Signature
+// 	closeSig := GetTokenName("HTML_CC_SCOPE").Signature
+// 	oScopeCt := strings.Count(s.Parent.AsRaw, openSig)
+// 	cScopeCt := strings.Count(s.Parent.AsRaw, closeSig)
+// 	nextBounds := s.ResolveNextScopeBounds()
+// 	lastBounds := s.ResolveLastScopeBounds()
+// 	// buf = s.Parent.AsRaw
+// 	if oScopeCt != cScopeCt {
+// 		panic("invalid scopes")
+// 	}
+// 	// make offset 1
+// 	// for i < (oScopeCt + 1) {
+// 	// 	println(i)
+// 	// 	i++
+// 	// }
+// 	fmt.Printf("Next Scope: %d, %d\n", nextBounds[0], nextBounds[1])
+// 	fmt.Printf("Last Scope: %d, %d\n", lastBounds[0], lastBounds[1])
+// 	println(len(openSig))
+// 	println(len(closeSig))
+// 	buf = strings.Replace(s.Parent.AsRaw, openSig, "", 1)
+// 	buf = strings.Replace(buf, closeSig, "", 1)
+// 	println(buf)
+// }

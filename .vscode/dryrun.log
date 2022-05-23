@@ -1,0 +1,6 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/abs/Desktop/github/htmlc-go'
+go run ./v2
+go run ./v2 ./.spec
+make: Leaving directory '/home/abs/Desktop/github/htmlc-go'
+ 

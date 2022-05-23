@@ -23,15 +23,15 @@ type HTMLCToken struct {
 	POptions        []HTMLCToken
 }
 
-// token that is resolved within a chunk
+// token that is resolved within a scope
 type HTMLCResolvedToken struct {
 	Token     HTMLCToken
 	StartLine int
 	EndLine   int
 	StartCol  int
 	EndCol    int
-	FromScope string
-	FromChunk string
+	//FromScope string
+	//FromChunk string
 }
 
 var RawList = []HTMLCToken{
