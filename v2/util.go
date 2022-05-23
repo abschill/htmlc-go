@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"reflect"
+
+	"github.com/fatih/color"
 )
 
 type KeyList = []string
@@ -22,6 +24,14 @@ func check(err error) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func LogSection() {
+	color.Yellow("%s", "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+}
+
+func LogSubSection() {
+	println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 }
 
 func GetType(x interface{}) string {
