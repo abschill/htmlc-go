@@ -51,6 +51,7 @@ func List() []HTMLCToken {
 	return RawList
 }
 
+// get a token by its name
 func GetTokenName(tag string) HTMLCToken {
 	var matcher HTMLCToken
 
