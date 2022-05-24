@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 )
 
@@ -28,8 +29,11 @@ func main() {
 	tt := []string{
 		"foo",
 	}
+	println("user input from config:")
 	for _, key := range tt {
-		println(input[key].(string))
+		// todo - handle for non-string
+		res := fmt.Sprintf("{\"%s\":\"%s\"}", key, input[key].(string))
+		println(res)
 	}
 
 }
