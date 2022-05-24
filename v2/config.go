@@ -9,11 +9,11 @@ import (
 	"github.com/fatih/color"
 )
 
-type GUserInput = map[string]interface{}
+type Arbitrary map[string]interface{}
 
 type HTMLCConfigFile struct {
 	Config HTMLCConfig `json:"config"`
-	Data   GUserInput  `json:"data"`
+	Data   Arbitrary   `json:"data"`
 }
 
 type ProcessArg struct {
@@ -40,8 +40,7 @@ func GetProcessArgs() ProcessArgList {
 	if argc > 2 {
 		for i, arg := range argv {
 			for _, option := range validProcessArgs {
-				isMatch := option[0] == arg || option[1] == arg
-				if isMatch {
+				if option[0] == arg || option[1] == arg {
 					validOptions = append(validOptions, ProcessArg{
 						Key:   arg,
 						Value: argv[i+1],
@@ -88,7 +87,7 @@ func (config HTMLCConfigFile) getOptionsFSToConfig() HTMLCConfig {
 	return config.Config
 }
 
-func (config HTMLCConfigFile) getOptionsFSToInput() GUserInput {
+func (config HTMLCConfigFile) getOptionsFSToInput() Arbitrary {
 	return config.Data
 }
 

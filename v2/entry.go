@@ -1,6 +1,8 @@
 package main
 
-import "os"
+import (
+	"os"
+)
 
 func main() {
 	userArgs := GetProcessArgs()
@@ -19,7 +21,11 @@ func main() {
 	fsOptions := getFSOptions(cwd)
 	// get .config property from full file options
 	config := fsOptions.getOptionsFSToConfig()
+	input := fsOptions.getOptionsFSToInput()
 	// create loader from the config
 	loader := CreateLoader(config, cwd)
 	loader.Print()
+
+	println(input["foo"].(string))
+
 }
