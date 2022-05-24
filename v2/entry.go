@@ -25,7 +25,11 @@ func main() {
 	// create loader from the config
 	loader := CreateLoader(config, cwd)
 	loader.Print()
-
-	println(input["foo"].(string))
+	tt := []string{
+		"foo",
+	}
+	for _, key := range tt {
+		println(input[key].(string))
+	}
 
 }
