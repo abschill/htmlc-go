@@ -31,7 +31,13 @@ func LogSection() {
 }
 
 func LogSubSection() {
-	println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+	println("_________________________________________________")
+}
+
+func LogRawChunkHeader(c HTMLChunk) {
+	color.Magenta("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+	color.Green("Chunk Type: %s\nName: %s", c.ChunkType, c.ChunkName)
+	color.Magenta("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 }
 
 func GetType(x interface{}) string {

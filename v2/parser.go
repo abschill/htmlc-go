@@ -4,9 +4,18 @@ import (
 	"strings"
 )
 
-var SCOPE_SIZE = len(GetTokenName("HTML_OC_SCOPE").Signature)
-var CLOSURE_SIZE = len(GetTokenName("HTML_CC_SCOPE").Signature)
+var SCOPE_SIG = GetTokenName("HTML_OC_SCOPE").Signature
+var CLOSURE_SIG = GetTokenName("HTML_CC_SCOPE").Signature
+var SCOPE_SIZE = len(SCOPE_SIG)
+var CLOSURE_SIZE = len(CLOSURE_SIG)
 
+func CountScopes(c string) int {
+	return strings.Count(c, SCOPE_SIG)
+
+}
+func CountClosures(c string) int {
+	return strings.Count(c, CLOSURE_SIG)
+}
 func HasScope(content string) bool {
 	return strings.Contains(content, GetTokenName("HTML_OC_SCOPE").Signature)
 }

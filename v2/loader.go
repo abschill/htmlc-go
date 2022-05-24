@@ -8,6 +8,7 @@ import (
 	"github.com/fatih/color"
 )
 
+// structure for the loader to call on the server side
 type HTMLCLoader struct {
 	ProcessPath    string      `json:"processPath"`
 	Config         HTMLCConfig `json:"config"`
@@ -15,7 +16,7 @@ type HTMLCLoader struct {
 	CallableChunks []HTMLChunk
 }
 
-// todo - set up chunk finder, determine which ones are valid syntax and add them to callable chunks
+// create loader(s) for process
 func CreateLoader(config HTMLCConfig, processPath string) HTMLCLoader {
 	var rChunks []HTMLChunk
 	var cChunks []HTMLChunk
@@ -61,9 +62,10 @@ func CreateLoader(config HTMLCConfig, processPath string) HTMLCLoader {
 	}
 }
 
+// print data of loader to standard out
 func (loader HTMLCLoader) Print() {
 	//todo
-	color.HiBlue("%s: %s", "Resolved Chunk Path", loader.Config.ChunkPath)
+	color.HiBlue("%s: %s", "chunk path results from:", loader.Config.ChunkPath)
 
 	for _, chunk := range loader.ResolvedChunks {
 		chunk.Print()

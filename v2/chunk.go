@@ -27,46 +27,53 @@ type HTMLChunk struct {
 }
 
 type HTMLCScope struct {
-	Raw     string
-	Trimmed string
+	Raw        string
+	TrimCache0 string
+	CtxStart   int
+	CtxEnd     int
 }
 
 func (chunk HTMLChunk) Print() {
-	LogSection()
-	color.Green("Chunk Type: %s\nName: %s", chunk.ChunkType, chunk.ChunkName)
+	LogRawChunkHeader(chunk)
 	if chunk.IsStatic {
 		println("Static Content:")
 		println(chunk.AsRaw)
 		return
 	}
 	color.Yellow("Content Scopes:")
-	chunk.GetScopes()
+	for i, s := range chunk.GetScopes() {
+		println(i)
+		LogSubSection()
+		fmt.Printf("Scope Bounds: %d, %d\n", s.CtxStart, s.CtxEnd)
+		println(s.Raw)
+		LogSubSection()
+	}
 }
 
-func (chunk HTMLChunk) GetScopes() {
-
+func (chunk HTMLChunk) GetScopes() []HTMLCScope {
 	var buf string = chunk.AsRaw
-	//var output string
-	openSig := GetTokenName("HTML_OC_SCOPE").Signature
-	closeSig := GetTokenName("HTML_CC_SCOPE").Signature
-	oScopeCt := strings.Count(buf, openSig)
-	cScopeCt := strings.Count(buf, closeSig)
+	oScopeCt := CountScopes(buf)
+	cScopeCt := CountClosures(buf)
 	// scope closures dont match openings
 	if oScopeCt != cScopeCt {
-		panic("invalid scopes")
+		// we checked for this earlier but in case the input changes for some reason we check again here
+		panic(fmt.Errorf("invalid scopes: closures dont match up | (scopes:closures) = %d:%d\nin file %s", oScopeCt, cScopeCt, chunk.FilePath))
 	}
 	// split to create a delimiter then reinsert it during iteration to create the scope object for the chunk
-	test := strings.Split(buf, openSig)
-	for _, t := range test {
+	temp := strings.Split(buf, SCOPE_SIG)
+	for _, t := range temp {
 		if HasClosure(t) && !HasScope(t) {
-			LogSubSection()
-			reFmt := fmt.Sprintf("%s%s", openSig, t)
+			// first, format the signature back into the iterator
+			reFmt := fmt.Sprintf("%s%s", SCOPE_SIG, t)
 			reFmt = reFmt[0 : GetClosureIndex(reFmt)+CLOSURE_SIZE]
-			println(reFmt)
+			startPos := strings.Index(chunk.AsRaw, reFmt)
+			chunk.Scopes = append(chunk.Scopes, HTMLCScope{
+				Raw:        reFmt,
+				TrimCache0: strings.Replace(strings.Replace(buf, SCOPE_SIG, "", oScopeCt), CLOSURE_SIG, "", cScopeCt),
+				CtxStart:   startPos,
+				CtxEnd:     startPos + len(reFmt),
+			})
 		}
 	}
-
-	//	buf = strings.Replace(buf, openSig, "", oScopeCt)
-	//	buf = strings.Replace(buf, closeSig, "", cScopeCt)
-	//println(buf)
+	return chunk.Scopes
 }
