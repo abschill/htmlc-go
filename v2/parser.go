@@ -17,28 +17,26 @@ func CountClosures(c string) int {
 	return strings.Count(c, CLOSURE_SIG)
 }
 func HasScope(content string) bool {
-	return strings.Contains(content, GetTokenName("HTML_OC_SCOPE").Signature)
+	return strings.Contains(content, SCOPE_SIG)
 }
 
 func HasClosure(content string) bool {
-	return strings.Contains(content, GetTokenName("HTML_CC_SCOPE").Signature)
+	return strings.Contains(content, CLOSURE_SIG)
 }
 
 func GetClosureIndex(content string) int {
-	return strings.Index(content, GetTokenName("HTML_CC_SCOPE").Signature)
+	return strings.Index(content, CLOSURE_SIG)
 }
 
 // todo - find errors preemptively in syntax to validate
 func ValidSyntax(content string) bool {
-	openSig := GetTokenName("HTML_OC_SCOPE").Signature
-	closeSig := GetTokenName("HTML_CC_SCOPE").Signature
-	if strings.Contains(content, openSig) {
+	if strings.Contains(content, SCOPE_SIG) {
 		// no closing signature to match the opened scope
-		if !strings.Contains(content, closeSig) {
+		if !strings.Contains(content, CLOSURE_SIG) {
 			return false
 		}
 		// scope improperly ordered
-		if strings.Index(content, openSig) > strings.Index(content, closeSig) {
+		if strings.Index(content, SCOPE_SIG) > strings.Index(content, CLOSURE_SIG) {
 			return false
 		}
 	}

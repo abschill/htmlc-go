@@ -30,6 +30,13 @@ type HTMLCConfig struct {
 	LogPath   string `json:"logPath"`
 }
 
+func asProcessArg(key string, val string) ProcessArg {
+	return ProcessArg{
+		Key:   key,
+		Value: val,
+	}
+}
+
 // get arguments entered by the user into the process itself
 func GetProcessArgs() ProcessArgList {
 	validProcessArgs := GetValidProcessArgs()
@@ -41,20 +48,14 @@ func GetProcessArgs() ProcessArgList {
 		for i, arg := range argv {
 			for _, option := range validProcessArgs {
 				if option[0] == arg || option[1] == arg {
-					validOptions = append(validOptions, ProcessArg{
-						Key:   arg,
-						Value: argv[i+1],
-					})
+					validOptions = append(validOptions, asProcessArg(arg, argv[i+1]))
 				}
 			}
 		}
 		return validOptions
 	} else if argc == 2 {
 		// if its equal to 2, handle the anonymous arg as the path lookup argument.
-		validOptions = append(validOptions, ProcessArg{
-			Key:   "configPath",
-			Value: argv[argc-1],
-		})
+		validOptions = append(validOptions, asProcessArg("configPath", argv[argc-1]))
 	}
 	return validOptions
 }

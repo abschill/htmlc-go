@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 )
 
@@ -22,18 +21,16 @@ func main() {
 	fsOptions := getFSOptions(cwd)
 	// get .config property from full file options
 	config := fsOptions.getOptionsFSToConfig()
-	input := fsOptions.getOptionsFSToInput()
 	// create loader from the config
 	loader := CreateLoader(config, cwd)
 	loader.Print()
-	tt := []string{
-		"foo",
-	}
-	println("user input from config:")
-	for _, key := range tt {
-		// todo - handle for non-string
-		res := fmt.Sprintf("{\"%s\":\"%s\"}", key, input[key].(string))
-		println(res)
-	}
+	// define keys from config that you want to bring into the runtime
+
+	// println("user input from config:")
+	/**
+	ok so we need to take an array of key value pairs from the config file and then determine the type of the value in each
+	once we have the value we will know how to render it against any template expression, so we will need to set up a struct of some sort
+	that can identify the bindable methods for the given handle type.
+	**/
 
 }

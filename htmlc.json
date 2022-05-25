@@ -5,7 +5,14 @@
 		"writePath": "htmlc-out",
 		"logPath": "htmlc-log"
 	},
-	"data": {
-		"foo": "bar"
-	}
+	"data": [
+		{
+			"bar": "hi"
+		},
+		{
+			"foo": {
+				"prop": "hello"
+			}
+		}
+	]
 }
