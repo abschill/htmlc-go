@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"io/fs"
 	"io/ioutil"
 	"os"
 	"path"
@@ -64,6 +65,15 @@ func PrintTuple(k string, v string) {
 	color.Green("%s: %s", k, v)
 }
 
+func checkForConfig(ctx string, f fs.FileInfo, res *HTMLCConfigFile) {
+	fname := f.Name()
+	if fname == "htmlc.json" {
+		content, err := ioutil.ReadFile(path.Join(ctx, fname))
+		check(err)
+		json.Unmarshal([]byte(content), &res)
+	}
+}
+
 // get options file as unmarshalled JSON
 func getFSOptions() (HTMLCConfigFile, string) {
 	userArgs := GetProcessArgs()
@@ -82,11 +92,13 @@ func getFSOptions() (HTMLCConfigFile, string) {
 	check(err)
 	for _, file := range contextFiles {
 		if !file.IsDir() {
-			fname := file.Name()
-			if fname == "htmlc.json" {
-				content, err := ioutil.ReadFile(path.Join(ctx, fname))
-				check(err)
-				json.Unmarshal([]byte(content), &res)
+			checkForConfig(ctx, file, &res)
+		} else {
+			childCtx, err := ioutil.ReadDir(path.Join(ctx, file.Name()))
+			check(err)
+			for _, ffile := range childCtx {
+				// dont recur it because they may not have actually meant to leave config out
+				checkForConfig(ctx, ffile, &res)
 			}
 		}
 	}
