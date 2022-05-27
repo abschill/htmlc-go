@@ -9,16 +9,15 @@ import (
 	"github.com/fatih/color"
 )
 
-type Arbitrary map[string]interface{}
-
 type HTMLCConfigFile struct {
-	Config HTMLCConfig `json:"config"`
-	Data   Arbitrary   `json:"data"`
+	Config      HTMLCConfig  `json:"config"`
+	PreloadData []ProcessArg `json:"preload"`
 }
 
 type ProcessArg struct {
-	Key   string
-	Value string
+	Type  string `json:"type"`
+	Key   string `json:"key"`
+	Value string `json:"value"`
 }
 
 type ProcessArgList = []ProcessArg
@@ -66,7 +65,18 @@ func PrintTuple(k string, v string) {
 }
 
 // get options file as unmarshalled JSON
-func getFSOptions(ctx string) HTMLCConfigFile {
+func getFSOptions() (HTMLCConfigFile, string) {
+	userArgs := GetProcessArgs()
+	ctx, err := os.Getwd()
+	check(err)
+	if len(userArgs) > 0 {
+		for _, arg := range userArgs {
+			switch arg.Key {
+			case "configPath":
+				ctx = arg.Value
+			}
+		}
+	}
 	var res HTMLCConfigFile
 	contextFiles, err := ioutil.ReadDir(ctx)
 	check(err)
@@ -80,7 +90,7 @@ func getFSOptions(ctx string) HTMLCConfigFile {
 			}
 		}
 	}
-	return res
+	return res, ctx
 }
 
 // get config object as struct from unmarshalled config file
@@ -88,8 +98,8 @@ func (config HTMLCConfigFile) getOptionsFSToConfig() HTMLCConfig {
 	return config.Config
 }
 
-func (config HTMLCConfigFile) getOptionsFSToInput() Arbitrary {
-	return config.Data
+func (config HTMLCConfigFile) getOptionsFSToInput() []ProcessArg {
+	return config.PreloadData
 }
 
 // get default config options

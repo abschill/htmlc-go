@@ -5,14 +5,16 @@
 		"writePath": "htmlc-out",
 		"logPath": "htmlc-log"
 	},
-	"data": [
+	"preload": [
 		{
-			"bar": "hi"
+			"type": "value",
+			"key": "foo",
+			"value": "foo"
 		},
 		{
-			"foo": {
-				"prop": "hello"
-			}
+			"type": "value",
+			"key": "bar",
+			"value": "bar"
 		}
 	]
 }

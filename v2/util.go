@@ -44,11 +44,6 @@ func GetType(x interface{}) string {
 	return reflect.TypeOf(x).String()
 }
 
-// prefixes the packge into the typename ie isType("Foo") checks "main.Foo" bc thats how go lang does it
-func IsType(x interface{}, t string) bool {
-	return GetType(x) == fmt.Sprintf("%s.%s", pkgName, t)
-}
-
 func GetVersion() string {
 	runtimeVersion := HTMLCVersion{
 		0, 1, 1,

@@ -1,5 +1,7 @@
-all: run-0 run-1
+all: clr run-0
 
+clr:
+	clear
 
 run-0:
 	go run ./v2
