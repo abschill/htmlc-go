@@ -9,20 +9,7 @@ func main() {
 	loader := CreateLoader(config, cwd)
 	loader.Print()
 	// define keys from config that you want to bring into the runtime
-	/**
-	tester input
-	{
-		"a0": {
-				"a1": "foobar"
-			},
-		"b0": {
-			"b1": [
-				{
-					"name": "b1"
-				}
-			]
-		}
-	}**/
+	// iterate over each one and find the type resolution strategy within the template itself
 	for i, k := range fsOptions.getOptionsFSToInput() {
 		// we will assign each input with a type, whether it be bound to a struct, a list, or just be a string/number of some kind
 		if k.Type == "value" {
