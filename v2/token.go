@@ -4,6 +4,34 @@ import "strings"
 
 type IType string
 
+const HTMLCOpenScope = "<!--@htmlc|"
+const HTMLCCloseScope = "|@htmlc-->"
+const HTMLChunkMacroPrefix = "~"
+const HTMLChunkScopeOpen = "("
+const HTMLChunkScopeClose = ")"
+const HTMLChunkRender = "@render"
+const HTMLChunkLoop = "@loop"
+const HTMLChunkRenderChunk = "@chunk"
+const HTMLChunkEQ = "="
+const HTMLChunkEnf = "!"
+const HTMLChunkTry = "?"
+const HTMLCValidCharset = "[a-z | 0-9 | _ | -]"
+
+/**
+ * Chunk Calls to other chunks within the given lodaer
+**/
+const ChunkReggie = HTMLChunkRenderChunk + HTMLChunkEQ + "((" + HTMLCValidCharset + "+))"
+
+/**
+ * Keys that map to preloads / inlines
+**/
+const KeyReggie = HTMLChunkRender + HTMLChunkEQ + "((" + HTMLCValidCharset + "+))"
+
+/**
+ * Iterators that map to preloads / inlines
+**/
+const LoopOpenReggie = HTMLChunkLoop + HTMLChunkEQ + "((" + HTMLCValidCharset + "+))"
+
 const (
 	ISTART IType = "start" // start open chunk scope
 	_ISET  IType = "macro" // set metadata about chunk type
@@ -20,6 +48,7 @@ type HTMLCToken struct {
 	Name            string
 	Signature       string
 	InstructionType IType
+	rMatcher        string
 	POptions        []HTMLCToken
 }
 
@@ -35,16 +64,16 @@ type HTMLCResolvedToken struct {
 }
 
 var RawList = []HTMLCToken{
-	tokenize("HTML_OC_SCOPE", "<!--@htmlc|", ISTART),
-	tokenize("HTML_CC_SCOPE", "|@htmlc-->", IEND),
-	tokenize("HTMLC_CM_PREFIX", "~", _ISET),
-	tokenize("HTMLC_TD_OSCOPE", "(", IOPEN),
-	tokenize("HTMLC_TD_CSCOPE", ")", ICLOSE),
-	tokenize("HTMLC_TD_RENDER", "#render", ICALL),
-	tokenize("HTMLC_TD_CHUNK", "#chunk", ICALL),
-	tokenize("HTMLC_TO_SET", "=", ISET),
-	tokenize("HTMLC_TD_ENFORCE", "!", IWRAP),
-	tokenize("HTMLC_TD_TRY", "?", IWRAP),
+	tokenize("HTML_OC_SCOPE", HTMLCOpenScope, ISTART, HTMLCOpenScope),
+	tokenize("HTML_CC_SCOPE", HTMLCCloseScope, IEND, HTMLCCloseScope),
+	tokenize("HTMLC_CM_PREFIX", HTMLChunkMacroPrefix, _ISET, HTMLChunkMacroPrefix),
+	tokenize("HTMLC_TD_OSCOPE", HTMLChunkScopeOpen, IOPEN, HTMLChunkScopeOpen),
+	tokenize("HTMLC_TD_CSCOPE", HTMLChunkScopeClose, ICLOSE, HTMLChunkScopeClose),
+	tokenize("HTMLC_TD_RENDER", HTMLChunkRender, ICALL, HTMLChunkRender),
+	tokenize("HTMLC_TD_CHUNK", HTMLChunkRenderChunk, ICALL, HTMLChunkRenderChunk),
+	tokenize("HTMLC_TO_SET", HTMLChunkEQ, ISET, HTMLChunkEQ),
+	tokenize("HTMLC_TD_ENFORCE", HTMLChunkEnf, IWRAP, HTMLChunkEnf),
+	tokenize("HTMLC_TD_TRY", HTMLChunkTry, IWRAP, HTMLChunkTry),
 }
 
 func List() []HTMLCToken {
@@ -80,10 +109,11 @@ func (HTMLCToken) Replace() string {
 }
 
 // internal struct mapping
-func tokenize(name string, sig string, t IType) HTMLCToken {
+func tokenize(name string, sig string, t IType, matcher string) HTMLCToken {
 	return HTMLCToken{
 		Name:            name,
 		Signature:       sig,
 		InstructionType: t,
+		rMatcher:        matcher,
 	}
 }

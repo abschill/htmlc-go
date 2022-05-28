@@ -10,7 +10,7 @@ import (
 	"github.com/fatih/color"
 )
 
-type HTMLCConfigFile struct {
+type HTMLCTLOpts struct {
 	Config      HTMLCConfig  `json:"config"`
 	PreloadData []ProcessArg `json:"preload"`
 }
@@ -65,17 +65,17 @@ func PrintTuple(k string, v string) {
 	color.Green("%s: %s", k, v)
 }
 
-func checkForConfig(ctx string, f fs.FileInfo, res *HTMLCConfigFile) {
-	fname := f.Name()
-	if fname == "htmlc.json" {
-		content, err := ioutil.ReadFile(path.Join(ctx, fname))
+func checkForConfig(ctx string, f fs.FileInfo, res *HTMLCTLOpts) {
+	fileName := f.Name()
+	if fileName == "htmlc.json" {
+		topLevelOptions, err := ioutil.ReadFile(path.Join(ctx, fileName))
 		check(err)
-		json.Unmarshal([]byte(content), &res)
+		json.Unmarshal([]byte(topLevelOptions), &res)
 	}
 }
 
 // get options file as unmarshalled JSON
-func getFSOptions() (HTMLCConfigFile, string) {
+func getTopLevelOptions() (HTMLCTLOpts, string) {
 	userArgs := GetProcessArgs()
 	ctx, err := os.Getwd()
 	check(err)
@@ -87,7 +87,7 @@ func getFSOptions() (HTMLCConfigFile, string) {
 			}
 		}
 	}
-	var res HTMLCConfigFile
+	var res HTMLCTLOpts
 	contextFiles, err := ioutil.ReadDir(ctx)
 	check(err)
 	for _, file := range contextFiles {
@@ -106,11 +106,11 @@ func getFSOptions() (HTMLCConfigFile, string) {
 }
 
 // get config object as struct from unmarshalled config file
-func (config HTMLCConfigFile) getOptionsFSToConfig() HTMLCConfig {
+func (config HTMLCTLOpts) getConfig() HTMLCConfig {
 	return config.Config
 }
 
-func (config HTMLCConfigFile) getOptionsFSToInput() []ProcessArg {
+func (config HTMLCTLOpts) getPreloads() []ProcessArg {
 	return config.PreloadData
 }
 
