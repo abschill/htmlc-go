@@ -1,5 +1,9 @@
 package main
 
+import (
+	"github.com/fatih/color"
+)
+
 func CreateAST(chunk HTMLChunk) {
 	//kReggie, err := regexp.Compile(KeyReggie)
 	//check(err)
@@ -7,15 +11,24 @@ func CreateAST(chunk HTMLChunk) {
 	// take parser result and compile output - todo
 	LogRawChunkHeader(chunk)
 	for _, key := range List() {
-		matches := key.eMatcher.FindAllString(chunk.AsRaw, -1)
-		isMatch := key.eMatcher.MatchString(chunk.AsRaw)
+		println("Checking Key")
+		println(key.Name)
+		matches := key.iMatchReggie.FindAllString(chunk.AsRaw, -1)
+		isMatch := key.iMatchReggie.MatchString(chunk.AsRaw)
+		color.Magenta("Raw Content:")
+		println(chunk.AsRaw)
 		if isMatch {
 			println("Current Instruction:")
-			println(key.InstructionType)
-			println(key.rMatcher)
-			println(matches[0])
+			color.Blue("%s\n", key.InstructionType)
+			print("Found ", len(matches), " ", key.iMatchString, " matches in\n")
+
+			if key.iPrev != INULL {
+				println("Validate Prior Ins:")
+				color.Yellow("%s\n", key.iPrev)
+			}
+
 			println("Next Instruction:")
-			println(key.iNext)
+			color.Blue("%s\n", key.iNext)
 			println("~~~~~~~~~~")
 			// for _, match := range matches {
 			// 	println(strings.Index(chunk.AsRaw, match))

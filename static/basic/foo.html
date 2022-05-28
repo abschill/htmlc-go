@@ -1,18 +1,18 @@
 <!--@htmlc|
 	<section class="page-section">
-		<h4>@render=(section_title)</h4>
-		@loop=(section_items){
+		<h4>(@render=section_title)</h4>
+		(@loop=section_items{
 			|<div>{item.name}</div>|;
 			|<b>{item.price}</b>|
-		}
+		})
 	</section>
 |@htmlc-->
 <!--@htmlc|
 <section class="page-section">
-		<h4>@render=(section_title2)</h4>
-		@loop=(section_items2){
+		<h4>(@render=section_title2)</h4>
+		(@loop=(section_items2){
 			|<div>{item.name}</div>|;
 			|<b>{item.price}</b>|
-		}
+		})
 	</section>
 |@htmlc-->

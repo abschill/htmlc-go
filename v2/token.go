@@ -52,9 +52,10 @@ type HTMLCToken struct {
 	Name            string
 	Signature       string
 	InstructionType IType
-	rMatcher        string
-	eMatcher        regexp.Regexp
+	iMatchString    string
+	iMatchReggie    regexp.Regexp
 	iNext           IType
+	iPrev           IType
 }
 
 // token that is resolved within a scope
@@ -120,28 +121,39 @@ func tokenize(name string, sig string, t IType, matcher string) HTMLCToken {
 		panic("error setting up tokenizer")
 	}
 	cType := t
+	var iPrev IType
 	var iNext IType
 	// determine which type of instruction is to be expected after the current one to establish a valid syntax tree
 	switch cType {
 	case IWRAP:
-		iNext = IOPEN
+		iPrev = INULL
+		iNext = IOPEN // the thing you're wrapping
 	case IOPEN:
-		iNext = ICALL
+		iPrev = INULL // pad data within closed scope
+		iNext = ICALL // call scoped expression
 	case ICLOSE:
-		iNext = IBRK
+		iPrev = INULL // pad data within closed scope
+		iNext = IBRK  //should break line after scope end
 	case ICALL:
-		iNext = ISET
+		iPrev = IOPEN // should not be calling a directive outside of a scoped ()
+		iNext = ISET  // should follow by setting the macro with an ISET
 	case _ISET:
-		iNext = INULL
+		iPrev = INULL //macros can come afte rother macros
+		iNext = INULL //macros prepend the padded content
+	case ISET:
+		iPrev = ICALL // call directive to assign to the given data
+		iNext = INULL // call data from preloaded / inlined data
 	default:
+		iPrev = INULL
 		iNext = INULL
 	}
 	return HTMLCToken{
 		Name:            name,
 		Signature:       sig,
 		InstructionType: t,
-		rMatcher:        matcher,
-		eMatcher:        *reg,
+		iMatchString:    matcher,
+		iMatchReggie:    *reg,
 		iNext:           iNext,
+		iPrev:           iPrev,
 	}
 }
