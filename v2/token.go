@@ -45,6 +45,7 @@ const (
 	ISET   IType = "set"   // set directive input to argument follow up
 	IWRAP  IType = "wrap"  // wrap expression with a condition or configuration hook
 	IEND   IType = "end"   // end the html chunk scope
+	INULL  IType = "null"  // no-op, pad data (mask slots), so this just accumulates everything into a scope
 )
 
 type HTMLCToken struct {
@@ -53,7 +54,7 @@ type HTMLCToken struct {
 	InstructionType IType
 	rMatcher        string
 	eMatcher        regexp.Regexp
-	POptions        []HTMLCToken
+	iNext           IType
 }
 
 // token that is resolved within a scope
@@ -118,11 +119,29 @@ func tokenize(name string, sig string, t IType, matcher string) HTMLCToken {
 	if err != nil {
 		panic("error setting up tokenizer")
 	}
+	cType := t
+	var iNext IType
+	// determine which type of instruction is to be expected after the current one to establish a valid syntax tree
+	switch cType {
+	case IWRAP:
+		iNext = IOPEN
+	case IOPEN:
+		iNext = ICALL
+	case ICLOSE:
+		iNext = IBRK
+	case ICALL:
+		iNext = ISET
+	case _ISET:
+		iNext = INULL
+	default:
+		iNext = INULL
+	}
 	return HTMLCToken{
 		Name:            name,
 		Signature:       sig,
 		InstructionType: t,
 		rMatcher:        matcher,
 		eMatcher:        *reg,
+		iNext:           iNext,
 	}
 }

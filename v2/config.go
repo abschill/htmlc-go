@@ -123,3 +123,13 @@ func DefaultConfig() HTMLCConfig {
 		LogPath:   "htmlc-log",
 	}
 }
+
+func GetConfigFNameOptions() []string {
+	return []string{
+		"htmlc.json",
+		"hcl-config.json",
+		"htmlc-config.json",
+		".htmlc",
+		"htmlc.conf",
+	}
+}

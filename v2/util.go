@@ -16,8 +16,7 @@ type HTMLCVersion struct {
 	Patch uint8
 }
 
-type HTMLCUtils struct{}
-
+// name of pkg for type string resolution
 const pkgName = "main"
 
 func check(err error) {
@@ -26,14 +25,17 @@ func check(err error) {
 	}
 }
 
+// split off a section of standard out with a yellow line - for logging
 func LogSection() {
 	color.Yellow("%s", "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 }
 
+// split off a subsection of standard out for logging
 func LogSubSection() {
 	println("_________________________________________________")
 }
 
+// utility for sectioning off standard out in debugging
 func LogRawChunkHeader(c HTMLChunk) {
 	color.Magenta("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 	color.Green("Chunk Type: %s\nName: %s", c.ChunkType, c.ChunkName)
