@@ -1,15 +1,24 @@
 package main
 
-import "regexp"
-
 func CreateAST(chunk HTMLChunk) {
-	kReggie, err := regexp.Compile(KeyReggie)
-	check(err)
-	keys := kReggie.FindAllString(chunk.AsRaw, -1)
+	//kReggie, err := regexp.Compile(KeyReggie)
+	//check(err)
+	//keys := kReggie.FindAllString(chunk.AsRaw, -1)
 	// take parser result and compile output - todo
-
-	for i, key := range keys {
-		println(i)
-		println(key)
+	LogRawChunkHeader(chunk)
+	for _, key := range List() {
+		matches := key.eMatcher.FindAllString(chunk.AsRaw, -1)
+		isMatch := key.eMatcher.MatchString(chunk.AsRaw)
+		if isMatch {
+			println("Token Matches:")
+			println(key.rMatcher)
+			println(matches[0])
+			println("~~~~~~~~~~")
+			// for _, match := range matches {
+			// 	println(strings.Index(chunk.AsRaw, match))
+			// }
+		}
 	}
+	// println(List()[0].rMatcher)
+
 }

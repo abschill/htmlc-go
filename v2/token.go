@@ -1,20 +1,23 @@
 package main
 
-import "strings"
+import (
+	"regexp"
+	"strings"
+)
 
 type IType string
 
 const HTMLCOpenScope = "<!--@htmlc|"
 const HTMLCCloseScope = "|@htmlc-->"
 const HTMLChunkMacroPrefix = "~"
-const HTMLChunkScopeOpen = "("
-const HTMLChunkScopeClose = ")"
+const HTMLChunkScopeOpen = "\\("
+const HTMLChunkScopeClose = "\\)"
 const HTMLChunkRender = "@render"
 const HTMLChunkLoop = "@loop"
 const HTMLChunkRenderChunk = "@chunk"
 const HTMLChunkEQ = "="
 const HTMLChunkEnf = "!"
-const HTMLChunkTry = "?"
+const HTMLChunkTry = "\\?"
 const HTMLCValidCharset = "[a-z | 0-9 | _ | -]"
 
 /**
@@ -49,6 +52,7 @@ type HTMLCToken struct {
 	Signature       string
 	InstructionType IType
 	rMatcher        string
+	eMatcher        regexp.Regexp
 	POptions        []HTMLCToken
 }
 
@@ -110,10 +114,15 @@ func (HTMLCToken) Replace() string {
 
 // internal struct mapping
 func tokenize(name string, sig string, t IType, matcher string) HTMLCToken {
+	reg, err := regexp.Compile(matcher)
+	if err != nil {
+		panic("error setting up tokenizer")
+	}
 	return HTMLCToken{
 		Name:            name,
 		Signature:       sig,
 		InstructionType: t,
 		rMatcher:        matcher,
+		eMatcher:        *reg,
 	}
 }
