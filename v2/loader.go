@@ -24,7 +24,7 @@ func CreateLoader() HTMLCLoader {
 	// this gets the full config file with .config as a property
 	fsOptions, processPath := getTopLevelOptions()
 	// get .config property from full file options
-	config := fsOptions.getConfig()
+	config := fsOptions.GetConfig()
 	chunkPath := path.Join(processPath, config.BasePath, config.ChunkPath)
 	files, err := ioutil.ReadDir(chunkPath)
 	check(err)

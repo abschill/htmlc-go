@@ -7,24 +7,6 @@ import (
 	"github.com/fatih/color"
 )
 
-type KeyList = []string
-type KeyMap2D = []KeyList
-
-type HTMLCVersion struct {
-	Major uint8
-	Minor uint8
-	Patch uint8
-}
-
-// name of pkg for type string resolution
-const pkgName = "main"
-
-func check(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
-
 // split off a section of standard out with a yellow line - for logging
 func LogSection() {
 	color.Yellow("%s", "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
@@ -46,35 +28,30 @@ func GetType(x interface{}) string {
 	return reflect.TypeOf(x).String()
 }
 
-func GetVersion() string {
+func GetVersionString() string {
 	runtimeVersion := HTMLCVersion{
-		0, 1, 1,
+		HTMLC_VERSION_MAJOR, HTMLC_VERSION_MINOR, HTMLC_VERSION_PATCH,
 	}
 	return fmt.Sprintf("HTMLC Compiler Version: %d.%d.%d\n", runtimeVersion.Major, runtimeVersion.Minor, runtimeVersion.Patch)
 }
 
-func GetValidExtensions() []string {
-	return []string{
-		".htm",
-		".html",
-		".htmlc",
-		".hcl",
+func GetVersion(seg string) uint8 {
+	switch seg {
+	case "patch":
+		return HTMLC_VERSION_PATCH
+	case "minor":
+		return HTMLC_VERSION_MINOR
+	case "major":
+		return HTMLC_VERSION_MAJOR
+	default:
+		return HTMLC_VERSION_MAJOR
 	}
 }
 
+func GetValidChunkExtensions() []string {
+	return HTMLC_VALID_EXTENSIONS
+}
+
 func GetValidProcessArgs() KeyMap2D {
-	return KeyMap2D{
-		{
-			"-c",
-			"--config-file",
-		},
-		{
-			"-l",
-			"--loader-file",
-		},
-		{
-			"-d",
-			"--debug-file",
-		},
-	}
+	return HTMLC_VALID_pARGS
 }

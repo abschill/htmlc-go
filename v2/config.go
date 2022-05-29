@@ -11,12 +11,17 @@ import (
 )
 
 type HTMLCTLOpts struct {
-	Config      HTMLCConfig  `json:"config"`
-	PreloadData []ProcessArg `json:"preload"`
+	Config      HTMLCConfig       `json:"config"`
+	PreloadData []PreloadDataItem `json:"preload"`
+}
+
+type PreloadDataItem struct {
+	Type  string `json:"type"`
+	Key   string `json:"key"`
+	Value string `json:"value"`
 }
 
 type ProcessArg struct {
-	Type  string `json:"type"`
 	Key   string `json:"key"`
 	Value string `json:"value"`
 }
@@ -106,11 +111,11 @@ func getTopLevelOptions() (HTMLCTLOpts, string) {
 }
 
 // get config object as struct from unmarshalled config file
-func (config HTMLCTLOpts) getConfig() HTMLCConfig {
+func (config HTMLCTLOpts) GetConfig() HTMLCConfig {
 	return config.Config
 }
 
-func (config HTMLCTLOpts) getPreloads() []ProcessArg {
+func (config HTMLCTLOpts) GetPreloads() []PreloadDataItem {
 	return config.PreloadData
 }
 

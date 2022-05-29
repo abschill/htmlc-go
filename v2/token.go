@@ -18,6 +18,8 @@ const HTMLChunkRenderChunk = "@chunk"
 const HTMLChunkEQ = "="
 const HTMLChunkEnf = "!"
 const HTMLChunkTry = "\\?"
+const HTMLChunkExpandOpen = "{"
+const HTMLChunkExpandClose = "}"
 const HTMLCValidCharset = "[a-z | 0-9 | _ | -]"
 
 /**
@@ -36,16 +38,18 @@ const KeyReggie = HTMLChunkRender + HTMLChunkEQ + "((" + HTMLCValidCharset + "+)
 const LoopOpenReggie = HTMLChunkLoop + HTMLChunkEQ + "((" + HTMLCValidCharset + "+))"
 
 const (
-	ISTART IType = "start" // start open chunk scope
-	_ISET  IType = "macro" // set metadata about chunk type
-	IOPEN  IType = "open"  // start open expr scope inside chunk
-	ICLOSE IType = "close" // close IOPEN scope
-	IBRK   IType = "break" // break line & any existing scope
-	ICALL  IType = "call"  // call directive as argument
-	ISET   IType = "set"   // set directive input to argument follow up
-	IWRAP  IType = "wrap"  // wrap expression with a condition or configuration hook
-	IEND   IType = "end"   // end the html chunk scope
-	INULL  IType = "null"  // no-op, pad data (mask slots), so this just accumulates everything into a scope
+	ISTART   IType = "start"   // start open chunk scope
+	_ISET    IType = "macro"   // set metadata about chunk type
+	IOPEN    IType = "open"    // start open expr scope inside chunk
+	ICLOSE   IType = "close"   // close IOPEN scope
+	IBRK     IType = "break"   // break line & any existing scope
+	ICALL    IType = "call"    // call directive as argument
+	ISET     IType = "set"     // set directive input to argument follow up
+	IWRAP    IType = "wrap"    // wrap expression with a condition or configuration hook
+	IEND     IType = "end"     // end the html chunk scope
+	IEXPAND  IType = "expand"  // expand a scope to new line
+	ICEXPAND IType = "cexpand" // close expansion
+	INULL    IType = "null"    // no-op, pad data (mask slots), so this just accumulates everything into a scope
 )
 
 type HTMLCToken struct {
@@ -54,8 +58,9 @@ type HTMLCToken struct {
 	InstructionType IType
 	iMatchString    string
 	iMatchReggie    regexp.Regexp
-	iNext           IType
 	iPrev           IType
+	iNext           IType
+	iFollow         IType
 }
 
 // token that is resolved within a scope
@@ -80,6 +85,8 @@ var RawList = []HTMLCToken{
 	tokenize("HTMLC_TO_SET", HTMLChunkEQ, ISET, HTMLChunkEQ),
 	tokenize("HTMLC_TD_ENFORCE", HTMLChunkEnf, IWRAP, HTMLChunkEnf),
 	tokenize("HTMLC_TD_TRY", HTMLChunkTry, IWRAP, HTMLChunkTry),
+	tokenize("HTMLC_TD_EXPAND", HTMLChunkExpandOpen, IEXPAND, HTMLChunkExpandOpen),
+	tokenize("HTMLC_TD_cEXPAND", HTMLChunkExpandClose, ICEXPAND, HTMLChunkExpandClose),
 }
 
 func List() []HTMLCToken {
