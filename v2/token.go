@@ -49,7 +49,8 @@ const (
 	IEND     IType = "end"     // end the html chunk scope
 	IEXPAND  IType = "expand"  // expand a scope to new line
 	ICEXPAND IType = "cexpand" // close expansion
-	INULL    IType = "null"    // no-op, pad data (mask slots), so this just accumulates everything into a scope
+	INULL    IType = "dpad"    // no-op, pad data (mask slots), so this just accumulates everything into a scope
+	IPUT     IType = "put"     // user input
 )
 
 type HTMLCToken struct {
@@ -60,18 +61,12 @@ type HTMLCToken struct {
 	iMatchReggie    regexp.Regexp
 	iPrev           IType
 	iNext           IType
-	iFollow         IType
+	IsAnyNext       bool
 }
 
-// token that is resolved within a scope
-type HTMLCResolvedToken struct {
-	Token     HTMLCToken
-	StartLine int
-	EndLine   int
-	StartCol  int
-	EndCol    int
-	//FromScope string
-	//FromChunk string
+type ITypeScope struct {
+	rProps  []IType
+	rFollow []IType
 }
 
 var RawList = []HTMLCToken{
@@ -87,6 +82,7 @@ var RawList = []HTMLCToken{
 	tokenize("HTMLC_TD_TRY", HTMLChunkTry, IWRAP, HTMLChunkTry),
 	tokenize("HTMLC_TD_EXPAND", HTMLChunkExpandOpen, IEXPAND, HTMLChunkExpandOpen),
 	tokenize("HTMLC_TD_cEXPAND", HTMLChunkExpandClose, ICEXPAND, HTMLChunkExpandClose),
+	tokenize("HTMLC_TD_IPUT", HTMLCValidCharset, IPUT, HTMLCValidCharset),
 }
 
 func List() []HTMLCToken {
@@ -109,18 +105,6 @@ func (t HTMLCToken) IsIn(input string) bool {
 	return strings.Contains(input, t.Signature)
 }
 
-// todo
-func (HTMLCToken) GetFrom(input string) HTMLCResolvedToken {
-	return HTMLCResolvedToken{}
-}
-
-// todo
-func (HTMLCToken) Replace() string {
-	var output string = ""
-
-	return output
-}
-
 // internal struct mapping
 func tokenize(name string, sig string, t IType, matcher string) HTMLCToken {
 	reg, err := regexp.Compile(matcher)
@@ -139,17 +123,23 @@ func tokenize(name string, sig string, t IType, matcher string) HTMLCToken {
 		iPrev = INULL // pad data within closed scope
 		iNext = ICALL // call scoped expression
 	case ICLOSE:
-		iPrev = INULL // pad data within closed scope
-		iNext = IBRK  //should break line after scope end
+		iPrev = IPUT // pad data within closed scope
+		iNext = IBRK // should break line after scope end
 	case ICALL:
 		iPrev = IOPEN // should not be calling a directive outside of a scoped ()
 		iNext = ISET  // should follow by setting the macro with an ISET
 	case _ISET:
-		iPrev = INULL //macros can come afte rother macros
-		iNext = INULL //macros prepend the padded content
+		iPrev = INULL // macros can come afte rother macros
+		iNext = INULL // macros prepend the padded content
 	case ISET:
 		iPrev = ICALL // call directive to assign to the given data
 		iNext = INULL // call data from preloaded / inlined data
+	case IEXPAND:
+		iPrev = IPUT
+		iNext = INULL
+	case ICEXPAND:
+		iPrev = INULL
+		iNext = ICLOSE
 	default:
 		iPrev = INULL
 		iNext = INULL

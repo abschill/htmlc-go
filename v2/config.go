@@ -70,12 +70,16 @@ func PrintTuple(k string, v string) {
 	color.Green("%s: %s", k, v)
 }
 
+// check the file name to see if it matches the possible config names and if so, read it into struct ptr
 func checkForConfig(ctx string, f fs.FileInfo, res *HTMLCTLOpts) {
 	fileName := f.Name()
-	if fileName == "htmlc.json" {
-		topLevelOptions, err := ioutil.ReadFile(path.Join(ctx, fileName))
-		check(err)
-		json.Unmarshal([]byte(topLevelOptions), &res)
+	for _, fno := range GetConfigFNameOptions() {
+		if fileName == fno {
+			topLevelOptions, err := ioutil.ReadFile(path.Join(ctx, fileName))
+			check(err)
+			json.Unmarshal([]byte(topLevelOptions), &res)
+			return
+		}
 	}
 }
 
@@ -110,11 +114,12 @@ func getTopLevelOptions() (HTMLCTLOpts, string) {
 	return res, ctx
 }
 
-// get config object as struct from unmarshalled config file
+// get config data key as struct from unmarshalled config
 func (config HTMLCTLOpts) GetConfig() HTMLCConfig {
 	return config.Config
 }
 
+// get preload data key from the unmarshalled config
 func (config HTMLCTLOpts) GetPreloads() []PreloadDataItem {
 	return config.PreloadData
 }
@@ -129,6 +134,7 @@ func DefaultConfig() HTMLCConfig {
 	}
 }
 
+// get all possible names for config file
 func GetConfigFNameOptions() []string {
 	return []string{
 		"htmlc.json",
