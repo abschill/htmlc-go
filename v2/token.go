@@ -20,22 +20,22 @@ const HTMLChunkEnf = "!"
 const HTMLChunkTry = "\\?"
 const HTMLChunkExpandOpen = "{"
 const HTMLChunkExpandClose = "}"
-const HTMLCValidCharset = "[a-z | 0-9 | _ | -]"
+const HTMLCAnyChars = "[a-z | 0-9 | _ | -]"
 
 /**
  * Chunk Calls to other chunks within the given lodaer
 **/
-const ChunkReggie = HTMLChunkRenderChunk + HTMLChunkEQ + "((" + HTMLCValidCharset + "+))"
+const ChunkReggie = HTMLChunkRenderChunk + HTMLChunkEQ + "((" + HTMLCAnyChars + "+))"
 
 /**
  * Keys that map to preloads / inlines
 **/
-const KeyReggie = HTMLChunkRender + HTMLChunkEQ + "((" + HTMLCValidCharset + "+))"
+const KeyReggie = HTMLChunkRender + HTMLChunkEQ + "((" + HTMLCAnyChars + "+))"
 
 /**
  * Iterators that map to preloads / inlines
 **/
-const LoopOpenReggie = HTMLChunkLoop + HTMLChunkEQ + "((" + HTMLCValidCharset + "+))"
+const LoopOpenReggie = HTMLChunkLoop + HTMLChunkEQ + "((" + HTMLCAnyChars + "+))"
 
 const (
 	ISTART   IType = "start"   // start open chunk scope
@@ -56,12 +56,13 @@ const (
 type HTMLCToken struct {
 	Name            string
 	Signature       string
+	SLen            int
 	InstructionType IType
 	iMatchString    string
 	iMatchReggie    regexp.Regexp
-	iPrev           IType
-	iNext           IType
-	IsAnyNext       bool
+	IContext        ITypeScope
+	IsAnyP          bool
+	IsAnyN          bool
 }
 
 type ITypeScope struct {
@@ -82,7 +83,7 @@ var RawList = []HTMLCToken{
 	tokenize("HTMLC_TD_TRY", HTMLChunkTry, IWRAP, HTMLChunkTry),
 	tokenize("HTMLC_TD_EXPAND", HTMLChunkExpandOpen, IEXPAND, HTMLChunkExpandOpen),
 	tokenize("HTMLC_TD_cEXPAND", HTMLChunkExpandClose, ICEXPAND, HTMLChunkExpandClose),
-	tokenize("HTMLC_TD_IPUT", HTMLCValidCharset, IPUT, HTMLCValidCharset),
+	tokenize("HTMLC_TD_IPUT", HTMLCAnyChars, IPUT, HTMLCAnyChars),
 }
 
 func List() []HTMLCToken {
@@ -112,45 +113,43 @@ func tokenize(name string, sig string, t IType, matcher string) HTMLCToken {
 		panic("error setting up tokenizer")
 	}
 	cType := t
-	var iPrev IType
-	var iNext IType
+	var ctx ITypeScope
 	// determine which type of instruction is to be expected after the current one to establish a valid syntax tree
 	switch cType {
 	case IWRAP:
-		iPrev = INULL
-		iNext = IOPEN // the thing you're wrapping
+		ctx.rProps = append(ctx.rProps, INULL)
+		ctx.rFollow = append(ctx.rFollow, IOPEN) // the thing you're wrapping
 	case IOPEN:
-		iPrev = INULL // pad data within closed scope
-		iNext = ICALL // call scoped expression
+		ctx.rProps = append(ctx.rProps, INULL)   // pad data within closed scope
+		ctx.rFollow = append(ctx.rFollow, ICALL) // call scoped expression
 	case ICLOSE:
-		iPrev = IPUT // pad data within closed scope
-		iNext = IBRK // should break line after scope end
+		ctx.rProps = append(ctx.rProps, IPUT)   // pad data within closed scope
+		ctx.rFollow = append(ctx.rFollow, IBRK) // should break line after scope end
 	case ICALL:
-		iPrev = IOPEN // should not be calling a directive outside of a scoped ()
-		iNext = ISET  // should follow by setting the macro with an ISET
+		ctx.rProps = append(ctx.rProps, IOPEN)  // should not be calling a directive outside of a scoped ()
+		ctx.rFollow = append(ctx.rFollow, ISET) // should follow by setting the macro with an ISET
 	case _ISET:
-		iPrev = INULL // macros can come afte rother macros
-		iNext = INULL // macros prepend the padded content
+		ctx.rProps = append(ctx.rProps, INULL)   // macros can come afte rother macros
+		ctx.rFollow = append(ctx.rFollow, INULL) // macros prepend the padded content
 	case ISET:
-		iPrev = ICALL // call directive to assign to the given data
-		iNext = INULL // call data from preloaded / inlined data
+		ctx.rProps = append(ctx.rProps, ICALL)   // call directive to assign to the given data
+		ctx.rFollow = append(ctx.rFollow, INULL) // call data from preloaded / inlined data
 	case IEXPAND:
-		iPrev = IPUT
-		iNext = INULL
+		ctx.rProps = append(ctx.rProps, IPUT)
+		ctx.rFollow = append(ctx.rFollow, INULL)
 	case ICEXPAND:
-		iPrev = INULL
-		iNext = ICLOSE
+		ctx.rProps = append(ctx.rProps, INULL)
+		ctx.rFollow = append(ctx.rFollow, ICLOSE)
 	default:
-		iPrev = INULL
-		iNext = INULL
+
 	}
 	return HTMLCToken{
 		Name:            name,
 		Signature:       sig,
+		SLen:            len(sig),
 		InstructionType: t,
 		iMatchString:    matcher,
 		iMatchReggie:    *reg,
-		iNext:           iNext,
-		iPrev:           iPrev,
+		IContext:        ctx,
 	}
 }
