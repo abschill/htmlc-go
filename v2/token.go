@@ -106,6 +106,33 @@ func (t HTMLCToken) IsIn(input string) bool {
 	return strings.Contains(input, t.Signature)
 }
 
+type TokenMatchData struct {
+	Starts   []int
+	Ends     []int
+	Matches  []string
+	AsString string
+}
+
+func (t HTMLCToken) MatchFunc(chunk HTMLChunk) (bool, TokenMatchData) {
+	isMatch := t.iMatchReggie.MatchString(chunk.AsRaw)
+	if isMatch {
+		matches := t.iMatchReggie.FindStringSubmatch(chunk.AsRaw)
+		matchesIndices := t.iMatchReggie.FindStringSubmatchIndex(chunk.AsRaw)
+		var endIndices []int
+		for _, num := range matchesIndices {
+			endIndices = append(endIndices, num+t.SLen)
+		}
+		return true, TokenMatchData{
+			Starts:   matchesIndices,
+			Ends:     endIndices,
+			Matches:  matches,
+			AsString: t.Signature,
+		}
+	} else {
+		return true, TokenMatchData{}
+	}
+}
+
 // internal struct mapping
 func tokenize(name string, sig string, t IType, matcher string) HTMLCToken {
 	reg, err := regexp.Compile(matcher)
