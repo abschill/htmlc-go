@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/fatih/color"
 )
 
@@ -10,29 +12,24 @@ func CreateAST(chunk HTMLChunk) {
 	for _, key := range List() {
 		println("Checking Key")
 		println(key.Name)
-		//matches := key.iMatchReggie.FindStringSubmatch(chunk.AsRaw)
-		//matchesIndices := key.iMatchReggie.FindStringSubmatchIndex(chunk.AsRaw)
-
-		//isMatch := key.iMatchReggie.MatchString(chunk.AsRaw)
 		isMatch, matcher := key.MatchFunc(chunk)
-
-		if len(matcher.Starts) != 0 {
+		if len(matcher.Matches) != 0 {
 			print("Bounds:\n")
-			print(matcher.Starts[0])
-			print(", ", matcher.Ends[0], "\n")
+			for _, k := range matcher.Starts {
+				fmt.Printf("%d, %d\n", k[0], k[1])
+			}
 		}
 
 		if isMatch {
-			if len(key.IContext.rProps) != 0 {
-				println("Validate Prior Ins:")
-				color.Yellow("%s\n", key.IContext.rProps[0])
+			for _, x := range key.IContext.rProps {
+				println("Validate Prior:")
+				color.Yellow("%s\n", x)
 			}
-
-			if len(key.IContext.rFollow) != 0 {
-				println("Next Instruction:")
-				color.Blue("%s\n", key.IContext.rFollow[0])
-				println("~~~~~~~~~~")
+			for _, x := range key.IContext.rProps {
+				println("Needs Followup:")
+				color.Blue("%s\n", x)
 			}
+			println("~~~~~~~~~~")
 		}
 	}
 }

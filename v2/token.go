@@ -83,7 +83,7 @@ var RawList = []HTMLCToken{
 	tokenize("HTMLC_TD_TRY", HTMLChunkTry, IWRAP, HTMLChunkTry),
 	tokenize("HTMLC_TD_EXPAND", HTMLChunkExpandOpen, IEXPAND, HTMLChunkExpandOpen),
 	tokenize("HTMLC_TD_cEXPAND", HTMLChunkExpandClose, ICEXPAND, HTMLChunkExpandClose),
-	tokenize("HTMLC_TD_IPUT", HTMLCAnyChars, IPUT, HTMLCAnyChars),
+	//tokenize("HTMLC_TD_IPUT", HTMLCAnyChars, IPUT, HTMLCAnyChars),
 }
 
 func List() []HTMLCToken {
@@ -107,26 +107,18 @@ func (t HTMLCToken) IsIn(input string) bool {
 }
 
 type TokenMatchData struct {
-	Starts   []int
-	Ends     []int
-	Matches  []string
-	AsString string
+	Starts  [][]int
+	Matches []string
 }
 
 func (t HTMLCToken) MatchFunc(chunk HTMLChunk) (bool, TokenMatchData) {
 	isMatch := t.iMatchReggie.MatchString(chunk.AsRaw)
 	if isMatch {
-		matches := t.iMatchReggie.FindStringSubmatch(chunk.AsRaw)
-		matchesIndices := t.iMatchReggie.FindStringSubmatchIndex(chunk.AsRaw)
-		var endIndices []int
-		for _, num := range matchesIndices {
-			endIndices = append(endIndices, num+t.SLen)
-		}
+		matches := t.iMatchReggie.FindAllString(chunk.AsRaw, -1)
+		matchesIndices := t.iMatchReggie.FindAllStringIndex(chunk.AsRaw, -1)
 		return true, TokenMatchData{
-			Starts:   matchesIndices,
-			Ends:     endIndices,
-			Matches:  matches,
-			AsString: t.Signature,
+			Starts:  matchesIndices,
+			Matches: matches,
 		}
 	} else {
 		return true, TokenMatchData{}
