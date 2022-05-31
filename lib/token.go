@@ -7,11 +7,11 @@ import (
 
 type IType string
 
-const HTMLCOpenScope = "<!--@htmlc|"
-const HTMLCCloseScope = "|@htmlc-->"
+const HTMLCOpenScope = "<!--@htmlc"
+const HTMLCCloseScope = "@htmlc-->"
 const HTMLChunkMacroPrefix = "~"
-const HTMLChunkScopeOpen = "\\("
-const HTMLChunkScopeClose = "\\)"
+const HTMLChunkScopeOpen = "(("
+const HTMLChunkScopeClose = "))"
 const HTMLChunkRender = "@render"
 const HTMLChunkLoop = "@loop"
 const HTMLChunkRenderChunk = "@chunk"
@@ -23,19 +23,11 @@ const HTMLChunkExpandClose = "}"
 const HTMLCAnyChars = "[a-z | 0-9 | _ | -]"
 
 /**
- * Chunk Calls to other chunks within the given lodaer
-**/
-const ChunkReggie = HTMLChunkRenderChunk + HTMLChunkEQ + "((" + HTMLCAnyChars + "+))"
-
-/**
  * Keys that map to preloads / inlines
 **/
-const KeyReggie = HTMLChunkRender + HTMLChunkEQ + "((" + HTMLCAnyChars + "+))"
+const HTMLChunkRenderMatch = HTMLChunkScopeOpen + HTMLChunkRender + HTMLChunkEQ + HTMLCAnyChars + "+" + HTMLChunkScopeClose
 
-/**
- * Iterators that map to preloads / inlines
-**/
-const LoopOpenReggie = HTMLChunkLoop + HTMLChunkEQ + "((" + HTMLCAnyChars + "+))"
+const HTMLChunkChunkMatch = HTMLChunkScopeOpen + HTMLChunkRenderChunk + HTMLChunkEQ + HTMLCAnyChars + "+" + HTMLChunkScopeClose
 
 const (
 	ISTART   IType = "start"   // start open chunk scope
@@ -56,7 +48,6 @@ const (
 type HTMLCToken struct {
 	Name            string
 	Signature       string
-	SLen            int
 	InstructionType IType
 	iMatchString    string
 	iMatchReggie    regexp.Regexp
@@ -73,16 +64,16 @@ type ITypeScope struct {
 var RawList = []HTMLCToken{
 	tokenize("HTML_OC_SCOPE", HTMLCOpenScope, ISTART, HTMLCOpenScope),
 	tokenize("HTML_CC_SCOPE", HTMLCCloseScope, IEND, HTMLCCloseScope),
-	tokenize("HTMLC_CM_PREFIX", HTMLChunkMacroPrefix, _ISET, HTMLChunkMacroPrefix),
-	tokenize("HTMLC_TD_OSCOPE", HTMLChunkScopeOpen, IOPEN, HTMLChunkScopeOpen),
-	tokenize("HTMLC_TD_CSCOPE", HTMLChunkScopeClose, ICLOSE, HTMLChunkScopeClose),
-	tokenize("HTMLC_TD_RENDER", HTMLChunkRender, ICALL, HTMLChunkRender),
-	tokenize("HTMLC_TD_CHUNK", HTMLChunkRenderChunk, ICALL, HTMLChunkRenderChunk),
-	tokenize("HTMLC_TO_SET", HTMLChunkEQ, ISET, HTMLChunkEQ),
-	tokenize("HTMLC_TD_ENFORCE", HTMLChunkEnf, IWRAP, HTMLChunkEnf),
-	tokenize("HTMLC_TD_TRY", HTMLChunkTry, IWRAP, HTMLChunkTry),
-	tokenize("HTMLC_TD_EXPAND", HTMLChunkExpandOpen, IEXPAND, HTMLChunkExpandOpen),
-	tokenize("HTMLC_TD_cEXPAND", HTMLChunkExpandClose, ICEXPAND, HTMLChunkExpandClose),
+	//tokenize("HTMLC_CM_PREFIX", HTMLChunkMacroPrefix, _ISET, HTMLChunkMacroPrefix),
+	//tokenize("HTMLC_TD_OSCOPE", HTMLChunkScopeOpen, IOPEN, HTMLChunkScopeOpen),
+	//tokenize("HTMLC_TD_CSCOPE", HTMLChunkScopeClose, ICLOSE, HTMLChunkScopeClose),
+	tokenize("HTMLC_TD_RENDER", HTMLChunkRender, ICALL, HTMLChunkRenderMatch),
+	tokenize("HTMLC_TD_CHUNK", HTMLChunkRenderChunk, ICALL, HTMLChunkChunkMatch),
+	//tokenize("HTMLC_TO_SET", HTMLChunkEQ, ISET, HTMLChunkEQ),
+	//tokenize("HTMLC_TD_ENFORCE", HTMLChunkEnf, IWRAP, HTMLChunkEnf),
+	//tokenize("HTMLC_TD_TRY", HTMLChunkTry, IWRAP, HTMLChunkTry),
+	//tokenize("HTMLC_TD_EXPAND", HTMLChunkExpandOpen, IEXPAND, HTMLChunkExpandOpen),
+	//tokenize("HTMLC_TD_cEXPAND", HTMLChunkExpandClose, ICEXPAND, HTMLChunkExpandClose),
 	//tokenize("HTMLC_TD_IPUT", HTMLCAnyChars, IPUT, HTMLCAnyChars),
 }
 
@@ -129,7 +120,7 @@ func (t HTMLCToken) MatchFunc(scopeString string) (bool, TokenMatchData) {
 func tokenize(name string, sig string, t IType, matcher string) HTMLCToken {
 	reg, err := regexp.Compile(matcher)
 	if err != nil {
-		panic("error setting up tokenizer")
+		panic(err)
 	}
 	cType := t
 	var ctx ITypeScope
@@ -165,7 +156,6 @@ func tokenize(name string, sig string, t IType, matcher string) HTMLCToken {
 	return HTMLCToken{
 		Name:            name,
 		Signature:       sig,
-		SLen:            len(sig),
 		InstructionType: t,
 		iMatchString:    matcher,
 		iMatchReggie:    *reg,

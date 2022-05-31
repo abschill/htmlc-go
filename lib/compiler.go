@@ -20,6 +20,7 @@ func CreateAST(chunk HTMLChunk, scope HTMLCScope) {
 			print("Bounds:\n")
 			for _, k := range matcher.Starts {
 				fmt.Printf("%d, %d\n", k[0], k[1])
+				color.Green("%s\n", scope.Raw[k[0]:k[1]])
 			}
 		}
 
