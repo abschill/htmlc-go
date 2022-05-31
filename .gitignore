@@ -4,3 +4,7 @@ views2
 dev
 .idea
 v1
+core/*.sum
+core/*.mod
+compiler/*.sum
+compiler/*.mod

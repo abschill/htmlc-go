@@ -1,4 +1,4 @@
-package main
+package htmlc
 
 type KeyList = []string
 type KeyMap2D = []KeyList

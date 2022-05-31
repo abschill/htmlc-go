@@ -1,10 +1,11 @@
-package main
+package htmlc
 
 import (
 	"io/ioutil"
 	"path"
 	"strings"
 
+	"github.com/abschill/htmlc-go/compiler"
 	"github.com/fatih/color"
 )
 
@@ -13,14 +14,14 @@ type HTMLCLoader struct {
 	ProcessPath    string      `json:"processPath"`
 	ConfigFile     HTMLCTLOpts `json:"topLevelOptions"`
 	Config         HTMLCConfig `json:"configOptions"`
-	ResolvedChunks []HTMLChunk
-	CallableChunks []HTMLChunk
+	ResolvedChunks []compiler.HTMLChunk
+	CallableChunks []compiler.HTMLChunk
 }
 
 // create loader(s) for process
 func CreateLoader() HTMLCLoader {
-	var rChunks []HTMLChunk
-	var cChunks []HTMLChunk
+	var rChunks []compiler.HTMLChunk
+	var cChunks []compiler.HTMLChunk
 	// this gets the full config file with .config as a property
 	fsOptions, processPath := getTopLevelOptions()
 	// get .config property from full file options
@@ -38,14 +39,14 @@ func CreateLoader() HTMLCLoader {
 				fbytes, err := ioutil.ReadFile(fpath)
 				check(err)
 				content := string(fbytes)
-				isValid := ValidSyntax(content)
+				isValid := compiler.ValidSyntax(content)
 				splitName := strings.Split(fname, ".")
-				theChunk := HTMLChunk{
+				theChunk := compiler.HTMLChunk{
 					ChunkType:     "chunk",
 					ChunkName:     splitName[0],
 					FilePath:      fpath,
 					FileExtension: splitName[1],
-					IsStatic:      !HasScope(content),
+					IsStatic:      !compiler.HasScope(content),
 					IsValid:       isValid,
 					AsRaw:         content,
 				}
@@ -84,7 +85,7 @@ func (loader HTMLCLoader) PreloadTemplateData() {
 		if !chunk.IsStatic {
 			//
 			for _, scope := range scopeList {
-				CreateAST(chunk, scope)
+				compiler.CreateAST(chunk, scope)
 			}
 		}
 

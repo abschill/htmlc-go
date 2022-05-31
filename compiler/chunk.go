@@ -1,4 +1,4 @@
-package main
+package compiler
 
 import (
 	"fmt"
@@ -50,10 +50,8 @@ func (chunk HTMLChunk) Print() {
 	color.Yellow("Content Scopes:")
 	for i, s := range chunk.GetScopes() {
 		println(i)
-		LogSubSection()
 		fmt.Printf("Scope Bounds: %d, %d\n", s.CtxStart, s.CtxEnd)
 		println(s.Raw)
-		LogSubSection()
 	}
 }
 
