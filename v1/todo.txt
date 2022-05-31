@@ -1,4 +1,0 @@
-- implement iterator parsing
-- more unit tests
-- integration examples
-- doc reference

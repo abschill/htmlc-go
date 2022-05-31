@@ -1,4 +1,3 @@
 go 1.18
 
-use ./v1
-use ./v2
+use ./lib
