@@ -80,8 +80,12 @@ func (loader HTMLCLoader) Print() {
 
 func (loader HTMLCLoader) PreloadTemplateData() {
 	for _, chunk := range loader.ResolvedChunks {
+		scopeList := chunk.GetScopes()
 		if !chunk.IsStatic {
-			CreateAST(chunk)
+			//
+			for _, scope := range scopeList {
+				CreateAST(chunk, scope)
+			}
 		}
 
 	}

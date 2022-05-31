@@ -33,8 +33,15 @@ type HTMLCScope struct {
 	CtxEnd     int
 }
 
+// utility for sectioning off standard out in debugging
+func (c HTMLChunk) Log() {
+	color.Magenta("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+	color.Green("Chunk Type: %s\nName: %s", c.ChunkType, c.ChunkName)
+	color.Magenta("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+}
+
 func (chunk HTMLChunk) Print() {
-	LogRawChunkHeader(chunk)
+	chunk.Log()
 	if chunk.IsStatic {
 		println("Static Content:")
 		println(chunk.AsRaw)

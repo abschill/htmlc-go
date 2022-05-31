@@ -111,11 +111,11 @@ type TokenMatchData struct {
 	Matches []string
 }
 
-func (t HTMLCToken) MatchFunc(chunk HTMLChunk) (bool, TokenMatchData) {
-	isMatch := t.iMatchReggie.MatchString(chunk.AsRaw)
+func (t HTMLCToken) MatchFunc(scopeString string) (bool, TokenMatchData) {
+	isMatch := t.iMatchReggie.MatchString(scopeString)
 	if isMatch {
-		matches := t.iMatchReggie.FindAllString(chunk.AsRaw, -1)
-		matchesIndices := t.iMatchReggie.FindAllStringIndex(chunk.AsRaw, -1)
+		matches := t.iMatchReggie.FindAllString(scopeString, -1)
+		matchesIndices := t.iMatchReggie.FindAllStringIndex(scopeString, -1)
 		return true, TokenMatchData{
 			Starts:  matchesIndices,
 			Matches: matches,

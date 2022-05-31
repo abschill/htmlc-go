@@ -17,13 +17,6 @@ func LogSubSection() {
 	println("_________________________________________________")
 }
 
-// utility for sectioning off standard out in debugging
-func LogRawChunkHeader(c HTMLChunk) {
-	color.Magenta("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-	color.Green("Chunk Type: %s\nName: %s", c.ChunkType, c.ChunkName)
-	color.Magenta("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-}
-
 func GetType(x interface{}) string {
 	return reflect.TypeOf(x).String()
 }

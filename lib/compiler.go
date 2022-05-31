@@ -6,13 +6,16 @@ import (
 	"github.com/fatih/color"
 )
 
-func CreateAST(chunk HTMLChunk) {
-	LogRawChunkHeader(chunk)
-	println(chunk.AsRaw)
+func CreateAST(chunk HTMLChunk, scope HTMLCScope) {
+	chunk.Log()
+	// println(chunk.AsRaw)
+	println(scope.Raw)
+
 	for _, key := range List() {
+		isMatch, matcher := key.MatchFunc(scope.Raw)
 		println("Checking Key")
 		println(key.Name)
-		isMatch, matcher := key.MatchFunc(chunk)
+
 		if len(matcher.Matches) != 0 {
 			print("Bounds:\n")
 			for _, k := range matcher.Starts {

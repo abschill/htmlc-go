@@ -4,7 +4,7 @@ clr:
 	clear
 
 run-0:
-	go run ./v2
+	go run ./lib
 
 run-1:
-	go run ./v2 ./.spec
+	go run ./lib ./.spec
