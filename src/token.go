@@ -70,9 +70,9 @@ type ITypeScope struct {
 
 var TopLevelTokenList = []HTMLCToken{
 	tokenize("HTML_OC_SCOPE", HTMLCOpenScope, ISTART, HTMLCOpenScope),
-	tokenize("HTML_CC_SCOPE", HTMLCCloseScope, IEND, HTMLCCloseScope),
 	tokenize("HTMLC_TD_RENDER", HTMLChunkRender, ICALL, HTMLChunkRenderMatch),
 	tokenize("HTMLC_TD_CHUNK", HTMLChunkRenderChunk, ICALL, HTMLChunkChunkMatch),
+	tokenize("HTML_CC_SCOPE", HTMLCCloseScope, IEND, HTMLCCloseScope),
 }
 
 // get a token by its name
@@ -116,30 +116,12 @@ func tokenize(name string, sig string, t IType, matcher string) HTMLCToken {
 	if err != nil {
 		panic(err)
 	}
-	cType := t
-	var ctx []HTMLCSubToken
-	// determine which type of instruction is to be expected after the current one to establish a valid syntax tree
-	switch cType {
-	case IWRAP:
-		// ctx.rProps = append(ctx.rProps, INULL)
-		// ctx.rFollow = append(ctx.rFollow, IOPEN) // the thing you're wrapping
-	case IOPEN:
-		// ctx.rProps = append(ctx.rProps, INULL)   // pad data within closed scope
-		// ctx.rFollow = append(ctx.rFollow, ICALL) // call scoped expression
-	case ICLOSE:
-		// ctx.rProps = append(ctx.rProps, IPUT)   // pad data within closed scope
-		// ctx.rFollow = append(ctx.rFollow, IBRK) // should break line after scope end
-	case ICALL:
-		// ctx.rProps = append(ctx.rProps, IOPEN)  // should not be calling a directive outside of a scoped ()
-		// ctx.rFollow = append(ctx.rFollow, ISET) // should follow by setting the macro with an ISET
-		ctx = append(ctx, HTMLCSubToken{})
-	}
+
 	return HTMLCToken{
 		Name:            name,
 		Signature:       sig,
 		InstructionType: t,
 		iMatchString:    matcher,
 		iMatchReggie:    *reg,
-		//ValidChildren: todo
 	}
 }

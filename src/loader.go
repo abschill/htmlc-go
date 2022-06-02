@@ -78,22 +78,6 @@ func (loader HTMLCLoader) Print() {
 
 func (loader HTMLCLoader) Preload() {
 	for _, chunk := range loader.ResolvedChunks {
-		PreRender(chunk, loader.ConfigFile.PreloadData)
-		println(chunk.Render)
+		println(PreRender(chunk, loader.ConfigFile.PreloadData))
 	}
-
-	// for i, k := range loader.ConfigFile.getPreloads() {
-	// 	// we will assign each input with a type, whether it be bound to a struct, a list, or just be a string/number of some kind
-	// 	if k.Type == "value" {
-	// 		println("input ", i)
-	// 		println("key: ", k.Key)
-	// 		println("value: ", k.Value)
-	// 	}
-	// 	/**
-	// 	ok so we need to take an array of key value pairs from the config file and then determine the type of the value in each
-	// 	once we have the value we will know how to render it against any template expression, so we will need to set up a struct of some sort
-	// 	that can identify the bindable methods for the given handle type.
-	// 	**/
-
-	// }
 }

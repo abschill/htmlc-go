@@ -1,19 +1,29 @@
 {
 	"config": {
 		"basePath": ".samples",
-		"chunkPath": "basic1",
+		"chunkPath": "basic2",
 		"writePath": "htmlc-out",
 		"logPath": "htmlc-log"
 	},
 	"preload": [
 		{
 			"type": "value",
-			"key": "foo",
+			"key": "landing_page_title",
 			"value": "foo"
 		},
 		{
 			"type": "value",
-			"key": "bar",
+			"key": "landing_page_content",
+			"value": "bar"
+		},
+		{
+			"type": "value",
+			"key": "section1_title",
+			"value": "foo"
+		},
+		{
+			"type": "value",
+			"key": "section1_content",
 			"value": "bar"
 		}
 	]

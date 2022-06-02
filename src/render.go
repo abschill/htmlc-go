@@ -1,7 +1,6 @@
 package htmlc
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/fatih/color"
@@ -16,38 +15,53 @@ func parseScopedExpressionKey(expr string) string {
 	return ""
 }
 
-func PreRender(chunk HTMLChunk, items []PreloadDataItem) {
-	println(chunk.Raw)
+func getKeyIn(key string, items []PreloadDataItem) PreloadDataItem {
+	var ret PreloadDataItem
+	for _, di := range items {
+		if di.Key == key {
+			return di
+		}
+	}
+	return ret
+}
+
+func PreRender(chunk HTMLChunk, items []PreloadDataItem) string {
+	var renderedChunk string
 	scopeList := chunk.GetScopes()
 	if !chunk.IsStatic {
 		for _, scope := range scopeList {
+			var buf string = scope.Raw
 			for _, key := range TopLevelTokenList {
 				isMatch, matcher := key.MatchFunc(scope.Raw)
-				println("Checking Key")
-				println(key.Name)
-
 				if len(matcher.Matches) != 0 {
-					print("Bounds:\n")
+					//print("Bounds:\n")
 					for _, k := range matcher.Starts {
-						fmt.Printf("%d, %d\n", k[0], k[1])
+						//fmt.Printf("%d, %d\n", k[0], k[1])
 						expr := scope.Raw[k[0]:k[1]]
 						switch key.Name {
+						case "HTML_OC_SCOPE":
+							buf = strings.Replace(buf, HTMLCOpenScope+"|", "", -1)
+						case "HTML_CC_SCOPE":
+							buf = strings.Replace(buf, "|"+HTMLCCloseScope, "", -1)
 						case "HTMLC_TD_RENDER":
-							color.Green("%s\n", expr)
-							color.Green("Data Key: %s\n", parseScopedExpressionKey(expr))
+							_key := parseScopedExpressionKey(expr)
+							replaceVal := getKeyIn(_key, items).Value
+							replaceSeg := scope.Raw[k[0]-1 : k[1]+1]
+							buf = strings.Replace(buf, replaceSeg, replaceVal, -1)
 						default:
-							color.Yellow("Todo: %s", key.Name)
+							color.Yellow("unidentified token: %s", key.Name)
 						}
 					}
 				}
-
-				if isMatch {
-					println("~~~~~~~~~~")
+				if !isMatch {
+					panic("error in prerender with matcher")
 				}
 			}
+			renderedChunk += buf
 		}
 	} else {
-		chunk.Render = chunk.Raw
+		renderedChunk += chunk.Raw
 	}
 
+	return renderedChunk
 }
