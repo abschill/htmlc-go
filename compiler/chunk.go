@@ -21,8 +21,8 @@ type HTMLChunk struct {
 	FileExtension string
 	IsStatic      bool
 	IsValid       bool
-	AsRaw         string
-	AsRender      string
+	Raw           string
+	Render        string
 	Scopes        []HTMLCScope
 }
 
@@ -44,7 +44,7 @@ func (chunk HTMLChunk) Print() {
 	chunk.Log()
 	if chunk.IsStatic {
 		println("Static Content:")
-		println(chunk.AsRaw)
+		println(chunk.Raw)
 		return
 	}
 	color.Yellow("Content Scopes:")
@@ -56,7 +56,7 @@ func (chunk HTMLChunk) Print() {
 }
 
 func (chunk HTMLChunk) GetScopes() []HTMLCScope {
-	var buf string = chunk.AsRaw
+	var buf string = chunk.Raw
 	oScopeCt := CountScopes(buf)
 	cScopeCt := CountClosures(buf)
 	// scope closures dont match openings
@@ -71,7 +71,7 @@ func (chunk HTMLChunk) GetScopes() []HTMLCScope {
 			// first, format the signature back into the iterator
 			reFmt := fmt.Sprintf("%s%s", SCOPE_SIG, t)
 			reFmt = reFmt[0 : GetClosureIndex(reFmt)+CLOSURE_SIZE]
-			startPos := strings.Index(chunk.AsRaw, reFmt)
+			startPos := strings.Index(chunk.Raw, reFmt)
 			chunk.Scopes = append(chunk.Scopes, HTMLCScope{
 				Raw:        reFmt,
 				TrimCache0: strings.Replace(strings.Replace(buf, SCOPE_SIG, "", oScopeCt), CLOSURE_SIG, "", cScopeCt),

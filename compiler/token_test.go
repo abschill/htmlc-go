@@ -5,7 +5,7 @@ import (
 )
 
 func TestList(t *testing.T) {
-	tokens := List()
+	tokens := TopLevelTokenList
 	// test the head token item to be the opening matcher
 	if tokens[0].Signature != "<!--@htmlc|" {
 		t.Errorf("Error with signature: %s\n", tokens[0].Name)

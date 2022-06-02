@@ -48,7 +48,7 @@ func CreateLoader() HTMLCLoader {
 					FileExtension: splitName[1],
 					IsStatic:      !compiler.HasScope(content),
 					IsValid:       isValid,
-					AsRaw:         content,
+					Raw:           content,
 				}
 				rChunks = append(rChunks, theChunk)
 				if isValid {
@@ -71,25 +71,18 @@ func CreateLoader() HTMLCLoader {
 
 // print data of loader to standard out
 func (loader HTMLCLoader) Print() {
-	//todo
 	color.HiBlue("%s: %s", "chunk path results from:", loader.Config.ChunkPath)
-
 	for _, chunk := range loader.ResolvedChunks {
 		chunk.Print()
 	}
 }
 
-func (loader HTMLCLoader) PreloadTemplateData() {
+func (loader HTMLCLoader) Preload() {
 	for _, chunk := range loader.ResolvedChunks {
-		scopeList := chunk.GetScopes()
-		if !chunk.IsStatic {
-			//
-			for _, scope := range scopeList {
-				compiler.CreateAST(chunk, scope)
-			}
-		}
-
+		compiler.PreRender(chunk)
+		println(chunk.Render)
 	}
+
 	// for i, k := range loader.ConfigFile.getPreloads() {
 	// 	// we will assign each input with a type, whether it be bound to a struct, a list, or just be a string/number of some kind
 	// 	if k.Type == "value" {

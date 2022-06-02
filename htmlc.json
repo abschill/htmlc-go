@@ -1,7 +1,7 @@
 {
 	"config": {
 		"basePath": ".samples",
-		"chunkPath": "basic",
+		"chunkPath": "basic1",
 		"writePath": "htmlc-out",
 		"logPath": "htmlc-log"
 	},
