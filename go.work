@@ -1,4 +1,3 @@
 go 1.18
 
-use ./compiler
-use ./core
+use ./src

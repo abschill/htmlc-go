@@ -1,4 +1,4 @@
-package compiler
+package htmlc
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ func parseScopedExpressionKey(expr string) string {
 	return ""
 }
 
-func PreRender(chunk HTMLChunk) {
+func PreRender(chunk HTMLChunk, items []PreloadDataItem) {
 	println(chunk.Raw)
 	scopeList := chunk.GetScopes()
 	if !chunk.IsStatic {

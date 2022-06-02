@@ -114,16 +114,6 @@ func getTopLevelOptions() (HTMLCTLOpts, string) {
 	return res, ctx
 }
 
-// get config data key as struct from unmarshalled config
-func (config HTMLCTLOpts) GetConfig() HTMLCConfig {
-	return config.Config
-}
-
-// get preload data key from the unmarshalled config
-func (config HTMLCTLOpts) GetPreloads() []PreloadDataItem {
-	return config.PreloadData
-}
-
 // get default config options
 func DefaultConfig() HTMLCConfig {
 	return HTMLCConfig{
