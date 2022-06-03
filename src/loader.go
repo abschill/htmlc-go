@@ -76,8 +76,12 @@ func (loader HTMLCLoader) Print() {
 	}
 }
 
+// load templates with environment data instead of inline named template data.
+// this is the only render method for an ssg type of setup
 func (loader HTMLCLoader) Preload() {
 	for _, chunk := range loader.ResolvedChunks {
-		println(PreRender(chunk, loader.ConfigFile.PreloadData))
+		chunk.Render = PreRender(chunk, loader.ConfigFile.PreloadData)
+		println(chunk.Render)
+		println(chunk.Raw)
 	}
 }

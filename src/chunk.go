@@ -40,6 +40,14 @@ func (c HTMLChunk) Log() {
 	color.Magenta("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 }
 
+func (chunk HTMLChunk) GetScopeBounds() [][]int {
+	var bounds [][]int
+	for _, scope := range chunk.GetScopes() {
+		bounds = append(bounds, []int{scope.CtxStart, scope.CtxEnd})
+	}
+	return bounds
+}
+
 func (chunk HTMLChunk) Print() {
 	chunk.Log()
 	if chunk.IsStatic {

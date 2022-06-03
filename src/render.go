@@ -27,8 +27,8 @@ func getKeyIn(key string, items []PreloadDataItem) PreloadDataItem {
 
 func PreRender(chunk HTMLChunk, items []PreloadDataItem) string {
 	var renderedChunk string
-	scopeList := chunk.GetScopes()
 	if !chunk.IsStatic {
+		scopeList := chunk.GetScopes()
 		for _, scope := range scopeList {
 			var buf string = scope.Raw
 			for _, key := range TopLevelTokenList {
@@ -45,9 +45,14 @@ func PreRender(chunk HTMLChunk, items []PreloadDataItem) string {
 							buf = strings.Replace(buf, "|"+HTMLCCloseScope, "", -1)
 						case "HTMLC_TD_RENDER":
 							_key := parseScopedExpressionKey(expr)
-							replaceVal := getKeyIn(_key, items).Value
+							keyIn := getKeyIn(_key, items)
+							if keyIn.Type != "value" {
+								panic("render args not of type 'value'")
+							}
+							replaceVal := keyIn.Value
 							replaceSeg := scope.Raw[k[0]-1 : k[1]+1]
 							buf = strings.Replace(buf, replaceSeg, replaceVal, -1)
+
 						default:
 							color.Yellow("unidentified token: %s", key.Name)
 						}
