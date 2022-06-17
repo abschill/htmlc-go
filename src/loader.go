@@ -48,6 +48,7 @@ func CreateLoader() HTMLCLoader {
 					IsStatic:      !HasScope(content),
 					IsValid:       isValid,
 					Raw:           content,
+					MinifyLoad:    true,
 				}
 				rChunks = append(rChunks, theChunk)
 				if isValid {
@@ -81,7 +82,9 @@ func (loader HTMLCLoader) Print() {
 func (loader HTMLCLoader) Preload() {
 	for _, chunk := range loader.ResolvedChunks {
 		chunk.Render = PreRender(chunk, loader.ConfigFile.PreloadData)
+		println("~~~~~~~~~~~~")
 		println(chunk.Render)
+		println("~~~~~~~~~~~~")
 		println(chunk.Raw)
 	}
 }

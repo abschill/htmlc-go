@@ -68,5 +68,5 @@ func PreRender(chunk HTMLChunk, items []PreloadDataItem) string {
 		renderedChunk += chunk.Raw
 	}
 
-	return renderedChunk
+	return strings.ReplaceAll(strings.ReplaceAll(renderedChunk, "\n\t", ""), "\t", "")
 }

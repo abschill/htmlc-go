@@ -3,7 +3,8 @@
 		"basePath": ".samples",
 		"chunkPath": "basic2",
 		"writePath": "htmlc-out",
-		"logPath": "htmlc-log"
+		"logPath": "htmlc-log",
+		"minify": true
 	},
 	"preload": [
 		{

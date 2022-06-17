@@ -24,6 +24,7 @@ type HTMLChunk struct {
 	Raw           string
 	Render        string
 	Scopes        []HTMLCScope
+	MinifyLoad    bool
 }
 
 type HTMLCScope struct {
