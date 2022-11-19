@@ -1,9 +1,10 @@
-package htmlc
+package util
 
 import (
 	"fmt"
 	"reflect"
 
+	"github.com/abschill/htmlc-go/internal/env"
 	"github.com/fatih/color"
 )
 
@@ -22,8 +23,8 @@ func GetType(x interface{}) string {
 }
 
 func GetVersionString() string {
-	runtimeVersion := HTMLCVersion{
-		HTMLC_VERSION_MAJOR, HTMLC_VERSION_MINOR, HTMLC_VERSION_PATCH,
+	runtimeVersion := env.HTMLCVersion{
+		Major: env.HTMLC_VERSION_MAJOR, Minor: env.HTMLC_VERSION_MINOR, Patch: env.HTMLC_VERSION_PATCH,
 	}
 	return fmt.Sprintf("HTMLC Compiler Version: %d.%d.%d\n", runtimeVersion.Major, runtimeVersion.Minor, runtimeVersion.Patch)
 }
@@ -31,20 +32,26 @@ func GetVersionString() string {
 func GetVersion(seg string) uint8 {
 	switch seg {
 	case "patch":
-		return HTMLC_VERSION_PATCH
+		return env.HTMLC_VERSION_PATCH
 	case "minor":
-		return HTMLC_VERSION_MINOR
+		return env.HTMLC_VERSION_MINOR
 	case "major":
-		return HTMLC_VERSION_MAJOR
+		return env.HTMLC_VERSION_MAJOR
 	default:
-		return HTMLC_VERSION_MAJOR
+		return env.HTMLC_VERSION_MAJOR
 	}
 }
 
 func GetValidChunkExtensions() []string {
-	return HTMLC_VALID_EXTENSIONS
+	return env.HTMLC_VALID_EXTENSIONS
 }
 
-func GetValidProcessArgs() KeyMap2D {
-	return HTMLC_VALID_pARGS
+func GetValidProcessArgs() env.KeyMap2D {
+	return env.HTMLC_VALID_pARGS
+}
+
+func Check(err error) {
+	if err != nil {
+		panic(err)
+	}
 }

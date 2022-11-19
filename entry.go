@@ -1,11 +1,9 @@
 package main
 
-import (
-	"github.com/abschill/htmlc-go"
-)
+import "github.com/abschill/htmlc-go/pkg/core"
 
 func main() {
 	// create loader from the config
-	loader := htmlc.CreateLoader()
+	loader := core.CreateLoader()
 	loader.Preload()
 }

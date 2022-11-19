@@ -1,10 +1,11 @@
-package htmlc
+package core
 
 import (
 	"io/ioutil"
 	"path"
 	"strings"
 
+	"github.com/abschill/htmlc-go/internal/util"
 	"github.com/fatih/color"
 )
 
@@ -27,7 +28,7 @@ func CreateLoader() HTMLCLoader {
 	config := fsOptions.Config
 	chunkPath := path.Join(processPath, config.BasePath, config.ChunkPath)
 	files, err := ioutil.ReadDir(chunkPath)
-	check(err)
+	util.Check(err)
 	for _, file := range files {
 		// todo - set up path discovery sometime
 		if !file.IsDir() {
@@ -36,7 +37,7 @@ func CreateLoader() HTMLCLoader {
 			if strings.Contains(fname, ".html") {
 				fpath := path.Join(chunkPath, fname)
 				fbytes, err := ioutil.ReadFile(fpath)
-				check(err)
+				util.Check(err)
 				content := string(fbytes)
 				isValid := ValidSyntax(content)
 				splitName := strings.Split(fname, ".")

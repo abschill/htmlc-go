@@ -8,3 +8,4 @@ core/*.sum
 core/*.mod
 compiler/*.sum
 compiler/*.mod
+htmlc-go

@@ -1,4 +1,4 @@
-package htmlc
+package core
 
 import (
 	"regexp"

@@ -1,4 +1,4 @@
-package htmlc
+package core
 
 import (
 	"encoding/json"
@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 
+	"github.com/abschill/htmlc-go/internal/util"
 	"github.com/fatih/color"
 )
 
@@ -44,7 +45,7 @@ func asProcessArg(key string, val string) ProcessArg {
 
 // get arguments entered by the user into the process itself
 func GetProcessArgs() ProcessArgList {
-	validProcessArgs := GetValidProcessArgs()
+	validProcessArgs := util.GetValidProcessArgs()
 	var validOptions ProcessArgList
 	argv := os.Args
 	argc := len(argv)
@@ -76,7 +77,7 @@ func checkForConfig(ctx string, f fs.FileInfo, res *HTMLCTLOpts) {
 	for _, fno := range GetConfigFNameOptions() {
 		if fileName == fno {
 			topLevelOptions, err := ioutil.ReadFile(path.Join(ctx, fileName))
-			check(err)
+			util.Check(err)
 			json.Unmarshal([]byte(topLevelOptions), &res)
 			return
 		}
@@ -87,7 +88,7 @@ func checkForConfig(ctx string, f fs.FileInfo, res *HTMLCTLOpts) {
 func getTopLevelOptions() (HTMLCTLOpts, string) {
 	userArgs := GetProcessArgs()
 	ctx, err := os.Getwd()
-	check(err)
+	util.Check(err)
 	if len(userArgs) > 0 {
 		for _, arg := range userArgs {
 			switch arg.Key {
@@ -98,13 +99,13 @@ func getTopLevelOptions() (HTMLCTLOpts, string) {
 	}
 	var res HTMLCTLOpts
 	contextFiles, err := ioutil.ReadDir(ctx)
-	check(err)
+	util.Check(err)
 	for _, file := range contextFiles {
 		if !file.IsDir() {
 			checkForConfig(ctx, file, &res)
 		} else {
 			childCtx, err := ioutil.ReadDir(path.Join(ctx, file.Name()))
-			check(err)
+			util.Check(err)
 			for _, ffile := range childCtx {
 				// dont recur it because they may not have actually meant to leave config out
 				checkForConfig(ctx, ffile, &res)

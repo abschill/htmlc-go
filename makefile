@@ -1,7 +1,7 @@
 all: clr run-0
 
 clr:
-	clear
+	rm htmlc-go && clear
 
 run-0:
-	go run entry.go
+	go build && ./htmlc-go
